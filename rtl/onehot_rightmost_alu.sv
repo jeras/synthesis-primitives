@@ -19,13 +19,13 @@ module onehot_rightmost_alu #(
 
     // function definition
     function logic [XLEN-1:0] onehot_rightmost_f (logic [XLEN-1:0] x);
-        x = ~x;
-        onehot_rightmost_f = ~x & (x+1);
+        onehot_rightmost_f = x & (-x);
     endfunction: onehot_rightmost_f;
 
     // use synchronous reset
     always @(posedge clk)
     if (rst)  xo <= '0;
     else      xo <= onehot_rightmost_f(xr);
+//  else      xo <= xr & (-xr);
 
 endmodule: onehot_rightmost_alu

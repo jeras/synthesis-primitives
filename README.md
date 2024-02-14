@@ -1,7 +1,7 @@
 # synthesis-optimizations
 Observing and optimizing synthesis of common bit manipulation operations for FPGA and ASIC
 
-I checked the book, the formula for _a single 1-bit at the position of the rightmost 0-bit in x_ would be:
+I checked the book, the formula for _a word with a single 1-bit at the position of the rightmost 0-bit in x_ would be:
 ```Verilog
 onehot = ~x & (x+1);
 ```

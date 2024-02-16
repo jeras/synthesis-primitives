@@ -25,3 +25,7 @@ endfunction: onehot
 I was wandering how different synthesis tools would handle this equation in comparison to a for loop formula.
 
 A FPGA tool could do a better job with the addition formula
+
+
+test -x and observe schematic
+test adder and mux primitives

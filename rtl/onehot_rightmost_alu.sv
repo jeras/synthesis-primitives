@@ -1,17 +1,17 @@
 module onehot_rightmost_alu #(
-    int unsigned XLEN = 32
+    int unsigned WIDTH = 32
 )(
     // system signals
     input  logic clk,
     input  logic rst,
     // data signals
-(* IOB = "FALSE" *)    input  logic [XLEN-1:0] xi,
-(* IOB = "FALSE" *)    output logic [XLEN-1:0] xo
+(* IOB = "FALSE" *)    input  logic [WIDTH-1:0] xi,
+(* IOB = "FALSE" *)    output logic [WIDTH-1:0] xo
 );
 
     // input register
-    logic [XLEN-1:0] xr;
-(* keep = "true" *)    logic [XLEN-1:0] xr_neg;  // negative
+    logic [WIDTH-1:0] xr;
+(* keep = "true" *)    logic [WIDTH-1:0] xr_neg;  // negative
 
     // use synchronous reset
     always @(posedge clk)
@@ -21,7 +21,7 @@ module onehot_rightmost_alu #(
     assign xr_neg = -xr;
 
     // function definition
-    function logic [XLEN-1:0] onehot_rightmost_f (logic [XLEN-1:0] x);
+    function logic [WIDTH-1:0] onehot_rightmost_f (logic [WIDTH-1:0] x);
         onehot_rightmost_f = x & (-x);
     endfunction: onehot_rightmost_f;
 

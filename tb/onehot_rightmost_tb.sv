@@ -1,15 +1,15 @@
 module onehot_rightmost_tb #(
-    int unsigned XLEN = 8
+    int unsigned WIDTH = 8
 );
     // system signals
     logic clk;
     logic rst;
     // data signals
-    logic [XLEN-1:0] xi;
-    logic [XLEN-1:0] xi_loop;
-    logic [XLEN-1:0] xi_alu;
-    logic [XLEN-1:0] xo_loop;
-    logic [XLEN-1:0] xo_alu;
+    logic [WIDTH-1:0] xi;
+    logic [WIDTH-1:0] xi_loop;
+    logic [WIDTH-1:0] xi_alu;
+    logic [WIDTH-1:0] xo_loop;
+    logic [WIDTH-1:0] xo_alu;
 
     // clock
     initial clk = 1'b1;
@@ -38,7 +38,7 @@ module onehot_rightmost_tb #(
     end
 
     onehot_rightmost_loop #(
-        .XLEN  (XLEN)
+        .WIDTH  (WIDTH)
     ) dut_loop (
         // system signals
         .clk   (clk),
@@ -51,7 +51,7 @@ module onehot_rightmost_tb #(
     assign xi_loop = onehot_rightmost_loop.onehot_rightmost_f(xi);
 
     onehot_rightmost_alu #(
-        .XLEN  (XLEN)
+        .WIDTH  (WIDTH)
     ) dut_alu (
         // system signals
         .clk   (clk),

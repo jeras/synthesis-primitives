@@ -1,16 +1,16 @@
 module onehot_rightmost_loop #(
-    int unsigned XLEN = 32
+    int unsigned WIDTH = 32
 )(
     // system signals
     input  logic clk,
     input  logic rst,
     // data signals
-(* IOB = "FALSE" *)    input  logic [XLEN-1:0] xi,
-(* IOB = "FALSE" *)    output logic [XLEN-1:0] xo
+(* IOB = "FALSE" *)    input  logic [WIDTH-1:0] xi,
+(* IOB = "FALSE" *)    output logic [WIDTH-1:0] xo
 );
 
     // input register
-    logic [XLEN-1:0] xr;
+    logic [WIDTH-1:0] xr;
 
     // use synchronous reset
     always @(posedge clk)
@@ -18,9 +18,9 @@ module onehot_rightmost_loop #(
     else      xr <= xi;
 
     // function definition
-    function automatic logic [XLEN-1:0] onehot_rightmost_f (logic [XLEN-1:0] x);
+    function automatic logic [WIDTH-1:0] onehot_rightmost_f (logic [WIDTH-1:0] x);
         logic set = 1'b0;
-        for (int i=0; i<XLEN; i++) begin
+        for (int i=0; i<WIDTH; i++) begin
             if (set) begin
                 onehot_rightmost_f[i] = 1'b0;
             end else begin

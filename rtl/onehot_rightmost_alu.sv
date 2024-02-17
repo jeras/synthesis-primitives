@@ -11,7 +11,8 @@ module onehot_rightmost_alu #(
 
     // input register
     logic [WIDTH-1:0] xr;
-(* keep = "true" *)    logic [WIDTH-1:0] xr_neg;  // negative
+//(* keep = "true" *)    logic [WIDTH-1:0] xr_neg;  // negative
+    logic [WIDTH-1:0] xr_neg;  // negative
 
     // use synchronous reset
     always @(posedge clk)

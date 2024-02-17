@@ -46,16 +46,19 @@ module Arty_A7_100 (
     logic clk;
     logic rst;
 
-    localparam int unsigned WIDTH = 82;
+    localparam int unsigned WIDTH = 32;
 
     logic [WIDTH-1:0] xi;
     logic [WIDTH-1:0] xo_neg;
     logic [WIDTH-1:0] xo_loop;
     logic [WIDTH-1:0] xo_alu;
+
+    logic [$clog2(WIDTH)-1:0] idx_clog;
     
     logic             xor_neg;
     logic             xor_loop;
     logic             xor_alu;
+    logic             xor_clog;
 
 ////////////////////////////////////////////////////////////////////////////////
 // xpm_cdc_async_rst: Asynchronous Reset Synchronizer
@@ -118,19 +121,32 @@ module Arty_A7_100 (
         .xo    (xo_alu)
     );
 
+    (* KEEP_HIERARCHY = "TRUE" *) onehot_logarithm #(
+        .WIDTH  (WIDTH)
+    ) onehot_logarithm (
+        // system signals
+        .clk   (clk),
+        .rst   (rst),
+        // data signals
+        .xi    (xi),
+        .idx   (idx_clog)
+    );
+
 ////////////////////////////////////////////////////////////////////////////////
 // avoid minimizing test outputs
 ////////////////////////////////////////////////////////////////////////////////
 
     always @(posedge clk)
     begin
-        xor_neg  <= ^(xo_neg );
-        xor_loop <= ^(xo_loop);
-        xor_alu  <= ^(xo_alu );
+        xor_neg  <= ^(xo_neg  );
+        xor_loop <= ^(xo_loop );
+        xor_alu  <= ^(xo_alu  );
+        xor_clog <= ^(idx_clog);
     end
 
     assign led[4] = xor_neg ;
     assign led[5] = xor_loop;
     assign led[6] = xor_alu ;
+    assign led[7] = xor_clog;
 
 endmodule: Arty_A7_100

@@ -5,8 +5,8 @@ module onehot_rightmost_loop #(
     input  logic clk,
     input  logic rst,
     // data signals
-(* IOB = "FALSE" *)    input  logic [WIDTH-1:0] xi,
-(* IOB = "FALSE" *)    output logic [WIDTH-1:0] xo
+    input  logic [WIDTH-1:0] xi,
+    output logic [WIDTH-1:0] xo
 );
 
     // input register

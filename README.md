@@ -32,7 +32,7 @@ TODO:
 
 # References
 
-http://www-graphics.stanford.edu/~seander/bithacks.html
-https://www.beyond-circuits.com/wordpress/2009/01/recursive-modules/
-https://books.google.si/books/about/Hacker_s_Delight.html?id=VicPJYM0I5QC
-https://www.edaboard.com/threads/verilog-bit-mask-to-index-converter.274344/
+* http://www-graphics.stanford.edu/~seander/bithacks.html
+* https://www.beyond-circuits.com/wordpress/2009/01/recursive-modules/
+* https://books.google.si/books/about/Hacker_s_Delight.html?id=VicPJYM0I5QC
+* https://www.edaboard.com/threads/verilog-bit-mask-to-index-converter.274344/

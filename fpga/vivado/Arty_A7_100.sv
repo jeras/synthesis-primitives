@@ -46,19 +46,8 @@ module Arty_A7_100 (
     logic clk;
     logic rst;
 
-    localparam int unsigned WIDTH = 32;
-
-    logic [WIDTH-1:0] xi;
-    logic [WIDTH-1:0] xo_neg;
-    logic [WIDTH-1:0] xo_loop;
-    logic [WIDTH-1:0] xo_alu;
-
-    logic [$clog2(WIDTH)-1:0] idx_clog;
-    
-    logic             xor_neg;
-    logic             xor_loop;
-    logic             xor_alu;
-    logic             xor_clog;
+    logic [41:0] ck_i;
+    logic [41:0] ck_o;
 
 ////////////////////////////////////////////////////////////////////////////////
 // xpm_cdc_async_rst: Asynchronous Reset Synchronizer
@@ -77,76 +66,28 @@ module Arty_A7_100 (
        .dest_arst (rst)
     );
 
-////////////////////////////////////////////////////////////////////////////////
-// define test inputs
-////////////////////////////////////////////////////////////////////////////////
-
-    // concatenate signals (4*10+42=82) and cut the 
-    assign xi = WIDTH'({jd, jc, jb, ja, ck_io});
+    assign ck_i = ck_io;
+    assign ck_io = btn[1] ? ck_o : 'z;
 
 ////////////////////////////////////////////////////////////////////////////////
 // RTL instances
 ////////////////////////////////////////////////////////////////////////////////
 
-    (* KEEP_HIERARCHY = "TRUE" *) negative #(
-        .WIDTH  (WIDTH)
-    ) negative (
+    localparam int unsigned NUMBER = 4;
+
+    synthesis_optimization_top #(
+        .NUM_I  (4),
+        .NUM_O  (4),
+        .NUM_IO (4)
+    ) top (
         // system signals
-        .clk   (clk),
-        .rst   (rst),
-        // data signals
-        .xi    (xi),
-        .xo    (xo_neg)
+        .clk (clk),
+        .rst (rst),
+        // GPIO
+        .gpi (sw),
+        .gpo (led),
+        .p_i (ck_i[NUMBER-1:0]),
+        .p_o (ck_o[NUMBER-1:0])
     );
-
-    (* KEEP_HIERARCHY = "TRUE" *) onehot_rightmost_loop #(
-        .WIDTH  (WIDTH)
-    ) onehot_rightmost_loop (
-        // system signals
-        .clk   (clk),
-        .rst   (rst),
-        // data signals
-        .xi    (xi),
-        .xo    (xo_loop)
-    );
-
-    (* KEEP_HIERARCHY = "TRUE" *) onehot_rightmost_alu #(
-        .WIDTH  (WIDTH)
-    ) onehot_rightmost_alu (
-        // system signals
-        .clk   (clk),
-        .rst   (rst),
-        // data signals
-        .xi    (xi),
-        .xo    (xo_alu)
-    );
-
-    (* KEEP_HIERARCHY = "TRUE" *) onehot_logarithm #(
-        .WIDTH  (WIDTH)
-    ) onehot_logarithm (
-        // system signals
-        .clk   (clk),
-        .rst   (rst),
-        // data signals
-        .xi    (xi),
-        .idx   (idx_clog)
-    );
-
-////////////////////////////////////////////////////////////////////////////////
-// avoid minimizing test outputs
-////////////////////////////////////////////////////////////////////////////////
-
-    always @(posedge clk)
-    begin
-        xor_neg  <= ^(xo_neg  );
-        xor_loop <= ^(xo_loop );
-        xor_alu  <= ^(xo_alu  );
-        xor_clog <= ^(idx_clog);
-    end
-
-    assign led[4] = xor_neg ;
-    assign led[5] = xor_loop;
-    assign led[6] = xor_alu ;
-    assign led[7] = xor_clog;
 
 endmodule: Arty_A7_100

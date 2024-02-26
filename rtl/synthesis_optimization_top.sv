@@ -18,11 +18,14 @@ module synthesis_optimization_top #(
     output logic [NUM_IO-1:0] p_o
 );
 
+    localparam int unsigned WIDTH = 64;
+
+/*
+
 ////////////////////////////////////////////////////////////////////////////////
 // local signals
 ////////////////////////////////////////////////////////////////////////////////
 
-    localparam int unsigned WIDTH = 32;
     localparam int unsigned NUMBER = 4;
 
     logic [NUMBER-1:0]             ser_i;
@@ -103,6 +106,7 @@ module synthesis_optimization_top #(
         .idx   (par_i[3][$clog2(WIDTH)-1:0])
     );
 
+*/
 ////////////////////////////////////////////////////////////////////////////////
 // encoder I/O placeholders
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,8 +121,11 @@ module synthesis_optimization_top #(
 
     assign dec_par_i = '0;
 
-    assign dec_ser_i = p_i[NUMBER_ENC+NUMBER-1:NUMBER];
-    assign p_o[NUMBER_ENC+NUMBER-1:NUMBER] = enc_ser_o;
+//    assign dec_ser_i = p_i[NUMBER_ENC+NUMBER-1:NUMBER];
+//    assign p_o[NUMBER_ENC+NUMBER-1:NUMBER] = enc_ser_o;
+
+    assign dec_ser_i = p_i[NUMBER_ENC-1:0];
+    assign p_o[NUMBER_ENC-1:0] = enc_ser_o;
 
     placeholder #(
         .WIDTH  (WIDTH)
@@ -156,9 +163,13 @@ module synthesis_optimization_top #(
 // encoder RTL
 ////////////////////////////////////////////////////////////////////////////////
 
-    priority_encoder #(
+    priority_encoder_wrap #(
         .WIDTH (WIDTH)
     ) priority_encoder (
+        // system signals
+        .clk (clk),
+        .rst (rst),
+        // wrapped signals
         .dec_vld (dec_par_o[0]),
         .enc_idx (enc_par_i[0][$clog2(WIDTH)-1:0]),
         .enc_vld (enc_par_i[0][$clog2(WIDTH)    ])

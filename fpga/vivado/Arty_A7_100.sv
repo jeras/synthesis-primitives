@@ -73,7 +73,7 @@ module Arty_A7_100 (
 // RTL instances
 ////////////////////////////////////////////////////////////////////////////////
 
-    localparam int unsigned NUMBER = 5;
+    localparam int unsigned NUMBER = 1;
 
     synthesis_optimization_top #(
         .NUM_I  (4),

@@ -1,6 +1,6 @@
 module priority_encoder_wrap #(
     int unsigned WIDTH = 32,
-    int unsigned DIV = 2,
+    int unsigned SPLIT = 2,
     bit mode = 1'b1
 )(
     // system signals
@@ -22,7 +22,8 @@ module priority_encoder_wrap #(
     else      tmp_dec_vld <= dec_vld;
 
     priority_encoder #(
-        .WIDTH (WIDTH)
+        .WIDTH (WIDTH),
+        .SPLIT (SPLIT)
     ) priority_encoder (
         .dec_vld (tmp_dec_vld),
         .enc_idx (tmp_enc_idx),

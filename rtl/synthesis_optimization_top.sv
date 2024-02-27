@@ -163,8 +163,11 @@ module synthesis_optimization_top #(
 // encoder RTL
 ////////////////////////////////////////////////////////////////////////////////
 
+    localparam int unsigned SPLIT = 4;
+
     priority_encoder_wrap #(
-        .WIDTH (WIDTH)
+        .WIDTH (WIDTH),
+        .SPLIT (SPLIT)
     ) priority_encoder (
         // system signals
         .clk (clk),

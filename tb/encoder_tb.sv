@@ -1,5 +1,6 @@
 module encoder_tb #(
-    int unsigned WIDTH = 4
+    int unsigned WIDTH = 16,
+    int unsigned SPLIT = 4
 );
 
     localparam time T = 10ns;
@@ -7,12 +8,9 @@ module encoder_tb #(
     // input
     logic [WIDTH-1:0] dec_vld;
     logic [WIDTH-1:0] tmp_vld = '0;
-    // simple encoder output
-    logic [$clog2(WIDTH)-1:0] enc_idx_smp;
-    logic                     enc_vld_smp;
-    // priority encoder output
-    logic [$clog2(WIDTH)-1:0] enc_idx_pri;
-    logic                     enc_vld_pri;
+    // priority encoder
+    logic [$clog2(WIDTH)-1:0] enc_idx;
+    logic                     enc_vld;
 
     initial
     begin
@@ -40,20 +38,13 @@ module encoder_tb #(
         $finish;
     end
 
-    simple_encoder #(
-        .WIDTH (WIDTH)
-    ) simple_encoder (
-        .dec_vld (dec_vld),
-        .enc_idx (enc_idx_smp),
-        .enc_vld (enc_vld_smp)
-    );
-
     priority_encoder #(
-        .WIDTH (WIDTH)
+        .WIDTH (WIDTH),
+        .SPLIT (SPLIT)
     ) priority_encoder (
         .dec_vld (dec_vld),
-        .enc_idx (enc_idx_pri),
-        .enc_vld (enc_vld_pri)
+        .enc_idx (enc_idx),
+        .enc_vld (enc_vld)
     );
 
 endmodule: encoder_tb

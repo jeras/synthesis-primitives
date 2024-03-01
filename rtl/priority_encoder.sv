@@ -1,13 +1,16 @@
 module priority_encoder #(
+    // size parameters
     parameter  int unsigned WIDTH = 32,
     parameter  int unsigned SPLIT = 2,
+    // size local parameters
     localparam int unsigned WIDTH_LOG = $clog2(WIDTH),
     localparam int unsigned SPLIT_LOG = $clog2(SPLIT),
+    // implementation
     bit mode = 1'b1
 )(
-    input  logic [       WIDTH -1:0] dec_vld,
-    output logic [$clog2(WIDTH)-1:0] enc_idx,
-    output logic                     enc_vld
+    input  logic [SPLIT-1:0][WIDTH/SPLIT-1:0] dec_vld,
+    output logic            [WIDTH_LOG  -1:0] enc_idx,
+    output logic                              enc_vld
 );
 
     function logic [SPLIT_LOG-1:0] encode (logic [SPLIT-1:0] valid);
@@ -40,7 +43,7 @@ module priority_encoder #(
 
     end: simple
     else begin: recursive
-    
+
         if (WIDTH == SPLIT) begin: leaf
 
             // leaf
@@ -50,22 +53,23 @@ module priority_encoder #(
         end: leaf
         else begin: branch
 
-            logic [SPLIT-1:0] [$clog2(WIDTH/SPLIT)-1:0] tmp_idx;
-            logic [SPLIT-1:0]                           tmp_vld;
+            logic [SPLIT-1:0] [WIDTH_LOG-SPLIT_LOG-1:0] sub_idx;
+            logic [SPLIT-1:0]                           sub_vld;
+            logic                       [SPLIT_LOG-1:0] tmp_idx;
 
             priority_encoder #(
                .WIDTH (WIDTH/SPLIT),
                .SPLIT (SPLIT)
             ) encoder [SPLIT-1:0] (
                 .dec_vld (dec_vld),
-                .enc_idx (tmp_idx),
-                .enc_vld (tmp_vld)
+                .enc_idx (sub_idx),
+                .enc_vld (sub_vld)
             );
-        
+
             // branch
-            assign enc_idx[WIDTH_LOG-1-:SPLIT_LOG  ] = encode(tmp_vld);
-            assign enc_idx[WIDTH_LOG-1- SPLIT_LOG:0] = tmp_idx[enc_idx[WIDTH_LOG-1-:SPLIT_LOG]];
-            assign enc_vld = |tmp_vld;
+            assign tmp_idx = encode(sub_vld);
+            assign enc_idx = {tmp_idx, sub_idx[tmp_idx]};
+            assign enc_vld = |sub_vld;
 
         end: branch
 

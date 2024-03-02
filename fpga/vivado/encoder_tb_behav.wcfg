@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="encoder_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="encoder_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="660.001 ns"></ZoomEndTime>
+      <Cursor1Time time="660.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="294"></NameColumnWidth>
+      <ValueColumnWidth column_width="127"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="12" />
+   <wvobject type="array" fp_name="/encoder_tb/dec_vld">
+      <obj_property name="ElementShortName">dec_vld[15:0]</obj_property>
+      <obj_property name="ObjectShortName">dec_vld[15:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/enc_idx">
+      <obj_property name="ElementShortName">enc_idx[3:0]</obj_property>
+      <obj_property name="ObjectShortName">enc_idx[3:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/encoder_tb/enc_vld">
+      <obj_property name="ElementShortName">enc_vld</obj_property>
+      <obj_property name="ObjectShortName">enc_vld</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/ref_enc_idx">
+      <obj_property name="ElementShortName">ref_enc_idx[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ref_enc_idx[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/encoder_tb/ref_enc_vld">
+      <obj_property name="ElementShortName">ref_enc_vld</obj_property>
+      <obj_property name="ObjectShortName">ref_enc_vld</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/WIDTH">
+      <obj_property name="ElementShortName">WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/SPLIT">
+      <obj_property name="ElementShortName">SPLIT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SPLIT[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/WIDTH_LOG">
+      <obj_property name="ElementShortName">WIDTH_LOG[31:0]</obj_property>
+      <obj_property name="ObjectShortName">WIDTH_LOG[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/SPLIT_LOG">
+      <obj_property name="ElementShortName">SPLIT_LOG[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SPLIT_LOG[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/encoder_tb/T">
+      <obj_property name="ElementShortName">T[63:0]</obj_property>
+      <obj_property name="ObjectShortName">T[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group159">
+      <obj_property name="label">enc</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/dec_vld">
+         <obj_property name="ElementShortName">dec_vld[3:0][3:0]</obj_property>
+         <obj_property name="ObjectShortName">dec_vld[3:0][3:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/encoder_tb/priority_encoder/dec_vld[3]">
+            <obj_property name="ElementShortName">[3][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][3:0]</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/encoder_tb/priority_encoder/dec_vld[2]">
+            <obj_property name="ElementShortName">[2][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][3:0]</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/encoder_tb/priority_encoder/dec_vld[1]">
+            <obj_property name="ElementShortName">[1][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][3:0]</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/encoder_tb/priority_encoder/dec_vld[0]">
+            <obj_property name="ElementShortName">[0][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][3:0]</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/enc_idx">
+         <obj_property name="ElementShortName">enc_idx[3:0]</obj_property>
+         <obj_property name="ObjectShortName">enc_idx[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/encoder_tb/priority_encoder/enc_vld">
+         <obj_property name="ElementShortName">enc_vld</obj_property>
+         <obj_property name="ObjectShortName">enc_vld</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.sub_idx ">
+         <obj_property name="ElementShortName">\branch.sub_idx [3:0][1:0]</obj_property>
+         <obj_property name="ObjectShortName">\branch.sub_idx [3:0][1:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.sub_vld ">
+         <obj_property name="ElementShortName">\branch.sub_vld [3:0]</obj_property>
+         <obj_property name="ObjectShortName">\branch.sub_vld [3:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.brn_idx ">
+         <obj_property name="ElementShortName">\branch.brn_idx [1:0]</obj_property>
+         <obj_property name="ObjectShortName">\branch.brn_idx [1:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/WIDTH">
+         <obj_property name="ElementShortName">WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/SPLIT">
+         <obj_property name="ElementShortName">SPLIT[31:0]</obj_property>
+         <obj_property name="ObjectShortName">SPLIT[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/WIDTH_LOG">
+         <obj_property name="ElementShortName">WIDTH_LOG[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WIDTH_LOG[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/SPLIT_LOG">
+         <obj_property name="ElementShortName">SPLIT_LOG[31:0]</obj_property>
+         <obj_property name="ObjectShortName">SPLIT_LOG[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/MODE">
+         <obj_property name="ElementShortName">MODE[31:0]</obj_property>
+         <obj_property name="ObjectShortName">MODE[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group158">
+      <obj_property name="label">enc-0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /dec_vld">
+         <obj_property name="ElementShortName">dec_vld[3:0][0:0]</obj_property>
+         <obj_property name="ObjectShortName">dec_vld[3:0][0:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /enc_idx">
+         <obj_property name="ElementShortName">enc_idx[1:0]</obj_property>
+         <obj_property name="ObjectShortName">enc_idx[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /enc_vld">
+         <obj_property name="ElementShortName">enc_vld</obj_property>
+         <obj_property name="ObjectShortName">enc_vld</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /WIDTH">
+         <obj_property name="ElementShortName">WIDTH[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WIDTH[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /SPLIT">
+         <obj_property name="ElementShortName">SPLIT[31:0]</obj_property>
+         <obj_property name="ObjectShortName">SPLIT[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /WIDTH_LOG">
+         <obj_property name="ElementShortName">WIDTH_LOG[31:0]</obj_property>
+         <obj_property name="ObjectShortName">WIDTH_LOG[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /SPLIT_LOG">
+         <obj_property name="ElementShortName">SPLIT_LOG[31:0]</obj_property>
+         <obj_property name="ObjectShortName">SPLIT_LOG[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/encoder_tb/priority_encoder/\branch.encoder_sub[0] /MODE">
+         <obj_property name="ElementShortName">MODE[31:0]</obj_property>
+         <obj_property name="ObjectShortName">MODE[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

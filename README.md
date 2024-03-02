@@ -1,39 +1,47 @@
-# synthesis-optimizations
-Observing and optimizing synthesis of common bit manipulation operations for FPGA and ASIC
+# priority encoder
 
-I checked the book, the formula for _a word with a single 1-bit at the position of the rightmost 0-bit in x_ would be:
-```Verilog
-onehot = ~x & (x+1);
+Vivado Simulator v2023.2.1 bug report.
+
+## How to reproduce
+
+Open the vivado project:
+```bash
+vivado vivado_simulator_bug_encoder.xpr
 ```
 
-```Verilog
-x_rev = ~bitreverse(x);
-onehot = bitreverse(~(x_rev & (x_rev+1));
+Run simulation of `encoder_tb` top level module.
+
+There should be no errors instead `IMPLEMENTATIO[3]` and `IMPLEMENTATIO[4]`
+which use `unique/priority` `case () inside` statements, cause errors.
+
 ```
-This operation is explicitely using addition.
-
-A for loop formula would be (I did not run it, so it might be wrong):
-```SystemVerilog
-function [XLEN-1:0] onehot (
-  input [XLEN-1:0] x
-);
-  for (int i=XLEN; i>0; i++) begin
-  end
-endfunction: onehot
+# run 1000ns
+Error: IMPLEMENTATION[         3]:  enc_idx !=          4'd 0
+Time: 30 ns  Iteration: 0  Process: /encoder_tb/check/Block43_1  Scope: encoder_tb.check.Block43_1  File: /home/izi/VLSI/synthesis-optimizations/encoder_tb.sv Line: 46
+Error: IMPLEMENTATION[         4]:  enc_idx !=          4'd 0
+Time: 30 ns  Iteration: 0  Process: /encoder_tb/check/Block43_1  Scope: encoder_tb.check.Block43_1  File: /home/izi/VLSI/synthesis-optimizations/encoder_tb.sv Line: 46
+Error: IMPLEMENTATION[         3]:  enc_idx !=          4'd 1
+Time: 50 ns  Iteration: 0  Process: /encoder_tb/check/Block43_1  Scope: encoder_tb.check.Block43_1  File: /home/izi/VLSI/synthesis-optimizations/encoder_tb.sv Line: 46
+Error: IMPLEMENTATION[         4]:  enc_idx !=          4'd 1
+Time: 50 ns  Iteration: 0  Process: /encoder_tb/check/Block43_1  Scope: encoder_tb.check.Block43_1  File: /home/izi/VLSI/synthesis-optimizations/encoder_tb.sv Line: 46
+Error: IMPLEMENTATION[         3]:  enc_idx !=          4'd 2
+Time: 70 ns  Iteration: 0  Process: /encoder_tb/check/Block43_1  Scope: encoder_tb.check.Block43_1  File: /home/izi/VLSI/synthesis-optimizations/encoder_tb.sv Line: 46
+Error: IMPLEMENTATION[         4]:  enc_idx !=          4'd 2
 ```
 
-I was wandering how different synthesis tools would handle this equation in comparison to a for loop formula.
+## Some explanation
 
-A FPGA tool could do a better job with the addition formula
+I encountered issues simulating `unique/priority` `case () inside` statements.
 
-TODO:
-* test -x and observe schematic
-* test adder and mux primitives
+I created a testbench comparing multiple implementations of a 4 to 1 priority encoder.
 
-# References
+When the encoders are in the same flat file as the testbench, they seem to work correctly.
 
-* http://www-graphics.stanford.edu/~seander/bithacks.html
-* https://www.beyond-circuits.com/wordpress/2009/01/recursive-modules/
-* https://books.google.si/books/about/Hacker_s_Delight.html?id=VicPJYM0I5QC
-* https://www.edaboard.com/threads/verilog-bit-mask-to-index-converter.274344/
-* http://fpgacpu.ca/fpga/index.html
+When in a recursive implementation of a 16 to 4 priority encoder, the `case inside` versions of the code output `X` instead of the correct values.
+
+For reference I tested the code in another simulator which reported no errors.
+
+Vivado synthesis also seems to synthesize all versions correctly into the same logic.
+
+The testbenches have automatic checking or RTL outputs,
+in a correct simulation there should be no error assertions.

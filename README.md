@@ -45,3 +45,8 @@ Vivado synthesis also seems to synthesize all versions correctly into the same l
 
 The testbenches have automatic checking or RTL outputs,
 in a correct simulation there should be no error assertions.
+
+Xilinx documentation states this is implemented:
+https://docs.xilinx.com/r/en-US/ug900-vivado-logic-simulation/Running-SystemVerilog-in-Standalone-or-prj-Mode
+
+Set membership case statement | 12.5.4 | Supported

@@ -19,6 +19,7 @@ module encoder_tb #(
     logic [WIDTH_LOG-1:0] enc_pri;
     logic [WIDTH_LOG-1:0] enc_idx [0:IMPLEMENTATIONS-1];
     logic                 enc_vld [0:IMPLEMENTATIONS-1];
+    logic                 enc_neg [0:IMPLEMENTATIONS-1];
     // reference encoder
     logic [WIDTH_LOG-1:0] ref_enc_idx;
     logic                 ref_enc_vld;
@@ -60,13 +61,13 @@ module encoder_tb #(
     begin
         // idle test
         test = "zero";
-        dec_vld <= '0;
-        enc_pri <= WIDTH_LOG'(0);
+        dec_vld = '0;
+        enc_pri = WIDTH_LOG'(0);
         #T;
         check;
         #T;
         for (int unsigned pri=0; pri<WIDTH; pri++) begin: for_pri
-            enc_pri <= WIDTH_LOG'(pri);
+            enc_pri = WIDTH_LOG'(pri);
 
             // one-hot encoder test
             test = "one-hot";
@@ -91,7 +92,7 @@ module encoder_tb #(
                     else if (j==i)  tmp_vld[t] = 1'b1;
                     else            tmp_vld[t] = 1'bx;
                 end
-                dec_vld <= tmp_vld;
+                dec_vld = tmp_vld;
                 #T;
                 check;
                 #T;
@@ -100,7 +101,7 @@ module encoder_tb #(
             // priority encoder test (going through all input combinations)
             test = "all";
             for (logic unsigned [WIDTH-1:0] tmp_vld='1; tmp_vld!=0; tmp_vld--) begin: for_all
-                dec_vld <= {<<{tmp_vld}};
+                dec_vld = {<<{tmp_vld}};
                 #T;
                 check;
                 #T;
@@ -124,7 +125,8 @@ module encoder_tb #(
             .dec_vld (dec_vld),
             .enc_pri (enc_pri),
             .enc_idx (enc_idx[i]),
-            .enc_vld (enc_vld[i])
+            .enc_vld (enc_vld[i]),
+            .enc_neg (enc_neg[i]),
         );
 
     end: gen_imp

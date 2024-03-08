@@ -17,7 +17,8 @@ module priority_encoder #(
     input  logic            [WIDTH      -1:0] dec_vld,
     input  logic            [WIDTH_LOG  -1:0] enc_pri,
     output logic            [WIDTH_LOG  -1:0] enc_idx,
-    output logic                              enc_vld
+    output logic                              enc_vld,
+    output logic                              enc_neg
 );
 
     generate
@@ -92,6 +93,7 @@ module priority_encoder #(
         logic             [WIDTH_LOG-SPLIT_LOG-1:0] sub_pri;
         logic [SPLIT-1:0] [WIDTH_LOG-SPLIT_LOG-1:0] sub_idx;
         logic [SPLIT-1:0]                           sub_vld;
+        logic [SPLIT-1:0]                           sub_neg;
         logic                       [SPLIT_LOG-1:0] brn_pri;
         logic                       [SPLIT_LOG-1:0] brn_idx;
 
@@ -107,7 +109,8 @@ module priority_encoder #(
             .dec_vld (dec_vld),
             .enc_pri (sub_pri),
             .enc_idx (sub_idx),
-            .enc_vld (sub_vld)
+            .enc_vld (sub_vld),
+            .enc_neg (sub_neg)
         );
 
         // branch
@@ -119,7 +122,8 @@ module priority_encoder #(
             .dec_vld (sub_vld),
             .enc_pri (brn_pri),
             .enc_idx (brn_idx),
-            .enc_vld (enc_vld)
+            .enc_vld (enc_vld),
+            .enc_neg (enc_neg)
         );
 
         // multiplex sub-branches into branch

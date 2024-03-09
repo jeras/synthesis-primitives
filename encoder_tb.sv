@@ -123,10 +123,11 @@ module encoder_tb #(
             .IMPLEMENTATION (i)
         ) priority_encoder__casez (
             .dec_vld (dec_vld),
+            .dec_neg ('0),
             .enc_pri (enc_pri),
             .enc_idx (enc_idx[i]),
             .enc_vld (enc_vld[i]),
-            .enc_neg (enc_neg[i]),
+            .enc_neg (enc_neg[i])
         );
 
     end: gen_imp

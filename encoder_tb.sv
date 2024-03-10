@@ -17,17 +17,21 @@ module encoder_tb #(
     logic [WIDTH    -1:0] dec_vld;
     // priority encoder
     logic [WIDTH_LOG-1:0] enc_pri;
-    logic [WIDTH_LOG-1:0] enc_idx [0:IMPLEMENTATIONS-1];
-    logic                 enc_vld [0:IMPLEMENTATIONS-1];
-    logic                 enc_neg [0:IMPLEMENTATIONS-1];
+    logic [WIDTH_LOG-1:0] enc_idx_h;
+    logic [WIDTH_LOG-1:0] enc_idx_l;
+    logic                 enc_vld_h;
+    logic                 enc_vld_l;
+    // after
+    logic [WIDTH_LOG-1:0] enc_idx;
+    logic                 enc_vld;
     // reference encoder
     logic [WIDTH_LOG-1:0] ref_enc_idx;
     logic                 ref_enc_vld;
 
-    logic                 wrong   [0:IMPLEMENTATIONS-1];
+    logic                 wrong;
     string                test;
 
-    function  [WIDTH_LOG-1:0] encoder (
+    function [2-1:0][WIDTH_LOG-1:0] encoder (
         logic [WIDTH    -1:0] dec_vld,
         logic [WIDTH_LOG-1:0] enc_pri
     );
@@ -48,11 +52,9 @@ module encoder_tb #(
 
     // output checking task
     task check();
-        for (int unsigned i=0; i<IMPLEMENTATIONS; i++) begin
-            assert (enc_vld[i] == ref_enc_vld) else $error("@%t IMPLEMENTATION[%d]:  enc_vld != 1'b%b" , $time, i,            ref_enc_vld);
-            if (enc_vld[i]) begin  // do not check the encoded output, if it is not supposed to be valid
-            assert (enc_idx[i] == ref_enc_idx) else $error("@%t IMPLEMENTATION[%d]:  enc_idx != %d'd%d", $time, i, WIDTH_LOG, ref_enc_idx);
-            end
+        assert (enc_vld == ref_enc_vld) else $error("@%t :  enc_vld != 1'b%b" , $time,            ref_enc_vld);
+        if (enc_vld) begin  // do not check the encoded output, if it is not supposed to be valid
+        assert (enc_idx == ref_enc_idx) else $error("@%t :  enc_idx != %d'd%d", $time, WIDTH_LOG, ref_enc_idx);
         end
     endtask: check
 
@@ -110,27 +112,24 @@ module encoder_tb #(
         $finish;
     end
 
-    generate
-    for (genvar i=0; i<IMPLEMENTATIONS; i++) begin: gen_imp
+    // output checking
+    assign wrong = enc_idx != ref_enc_idx;
 
-        // output checking
-        assign wrong [i] = enc_idx[i] != ref_enc_idx;
+    // DUT RTL instance
+    priority_encoder #(
+        .WIDTH (WIDTH),
+        .SPLIT (SPLIT)
+    ) priority_encoder (
+        .dec_vld_h (dec_vld  ),
+        .dec_vld_l ('0       ),
+        .enc_pri   (enc_pri  ),
+        .enc_idx_h (enc_idx_h),
+        .enc_idx_l (enc_idx_l),
+        .enc_vld_h (enc_vld_h),
+        .enc_vld_l (enc_vld_l)
+    );
 
-        // DUT RTL instance
-        priority_encoder #(
-            .WIDTH (WIDTH),
-            .SPLIT (SPLIT),
-            .IMPLEMENTATION (i)
-        ) priority_encoder__casez (
-            .dec_vld (dec_vld),
-            .dec_neg ('0),
-            .enc_pri (enc_pri),
-            .enc_idx (enc_idx[i]),
-            .enc_vld (enc_vld[i]),
-            .enc_neg (enc_neg[i])
-        );
-
-    end: gen_imp
-    endgenerate
+    assign enc_vld =             enc_vld_h | enc_vld_l;
+    assign enc_idx = enc_vld_h ? enc_idx_h : enc_idx_l;
 
 endmodule: encoder_tb

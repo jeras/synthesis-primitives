@@ -32,58 +32,26 @@ module priority_encoder #(
                 2:
                 unique case (enc_pri) inside
                     1'b0:
-                    unique case (dec_vld) inside
-                        2'b?1  : begin enc_idx_h = 1'd0; enc_idx_l = 1'd0;  enc_vld_h = 1'd0; enc_vld_l = 1'd0; end
-                        2'b10  : begin enc_idx_h = 1'd1; enc_idx_l = 1'd1;  enc_vld_h = 1'd1; enc_vld_l = 1'd1; end
-                        default: begin enc_idx_h = 1'd0; enc_idx_l = 1'd0;  enc_vld_h = 1'd0; enc_vld_l = 1'd0; end
-                    endcase
+                    begin
+                        unique case ({dec_vld_h[1], dec_vld_l[1], dec_vld_h[0]}) inside
+                            3'b??_1: begin enc_idx_h = 1'd0; enc_vld_h = 1'd1; end
+                            3'b?1_0: begin enc_idx_h = 1'd1; enc_vld_h = 1'd1; end
+                            3'b10_0: begin enc_idx_h = 1'd1; enc_vld_h = 1'd1; end
+                            default: begin enc_idx_h = 1'dx; enc_vld_h = 1'd0; end
+                        endcase
+                                     begin enc_idx_l = 1'd0; enc_vld_l = dec_vld_l[0]; end
+                    end
                     1'b1:
-                    unique case (dec_vld) inside
-                        2'b?1  : begin enc_idx_h = 1'd0; enc_idx_l = 1'd0;  enc_vld_h = 1'd0; enc_vld_l = 1'd0; end
-                        2'b10  : begin enc_idx_h = 1'd1; enc_idx_l = 1'd1;  enc_vld_h = 1'd1; enc_vld_l = 1'd1; end
-                        default: begin enc_idx_h = 1'd0; enc_idx_l = 1'd0;  enc_vld_h = 1'd0; enc_vld_l = 1'd0; end
-                    endcase
+                    begin
+                                     begin enc_idx_h = 1'd1; enc_vld_h = dec_vld_h[1]; end
+                        unique case ({dec_vld_l[1], dec_vld_h[0], dec_vld_l[0]}) inside
+                            3'b?_?1: begin enc_idx_l = 1'd0; enc_vld_l = 1'd1; end
+                            3'b?_1?: begin enc_idx_l = 1'd0; enc_vld_l = 1'd1; end
+                            3'b1_0?: begin enc_idx_l = 1'd1; enc_vld_l = 1'd1; end
+                            default: begin enc_idx_l = 1'dx; enc_vld_l = 1'd0; end
+                        endcase
+                    end
                 endcase
-
-//                4: case (IMPLEMENTATION)
-//                    0:  // casez
-//                    casez (dec_vld)
-//                        4'b???1: enc_idx = 2'd0;
-//                        4'b??10: enc_idx = 2'd1;
-//                        4'b?100: enc_idx = 2'd2;
-//                        4'b1000: enc_idx = 2'd3;
-//                        default: enc_idx = 2'dx;
-//                    endcase
-//                    1:  // unique   if
-//                    unique   if (dec_vld ==? 4'b???1) enc_idx = 2'd0;
-//                    else     if (dec_vld ==? 4'b??10) enc_idx = 2'd1;
-//                    else     if (dec_vld ==? 4'b?100) enc_idx = 2'd2;
-//                    else     if (dec_vld ==? 4'b1000) enc_idx = 2'd3;
-//                    else                              enc_idx = 2'dx;
-//                    2:  // priority if
-//                    priority if (dec_vld ==? 4'b???1) enc_idx = 2'd0;
-//                    else     if (dec_vld ==? 4'b??1?) enc_idx = 2'd1;
-//                    else     if (dec_vld ==? 4'b?1??) enc_idx = 2'd2;
-//                    else     if (dec_vld ==? 4'b1???) enc_idx = 2'd3;
-//                    else                              enc_idx = 2'dx;
-//                    3:  // unique   case inside
-//                    unique case (dec_vld) inside
-//                        4'b???1: enc_idx = 2'd0;
-//                        4'b??10: enc_idx = 2'd1;
-//                        4'b?100: enc_idx = 2'd2;
-//                        4'b1000: enc_idx = 2'd3;
-//                        default: enc_idx = 2'dx;
-//                    endcase
-//                    4:  // priority case inside
-//                    priority case (dec_vld) inside
-//                        4'b???1: enc_idx = 2'd0;
-//                        4'b??1?: enc_idx = 2'd1;
-//                        4'b?1??: enc_idx = 2'd2;
-//                        4'b1???: enc_idx = 2'd3;
-//                        default: enc_idx = 2'dx;
-//                    endcase
-//                endcase
-//                enc_vld = |dec_vld;
             endcase
         end
 

@@ -1,4 +1,4 @@
-module priority_encoder #(
+module programmable_priority_encoder #(
     // size parameters
     parameter  int unsigned WIDTH = 32,
     parameter  int unsigned SPLIT = 2,
@@ -75,7 +75,7 @@ module priority_encoder #(
         assign {brn_pri, sub_pri} = enc_pri;
 
         // sub-branches
-        priority_encoder #(
+        programmable_priority_encoder #(
             .WIDTH (WIDTH/SPLIT),
             .SPLIT (SPLIT),
             .IMPLEMENTATION (IMPLEMENTATION)
@@ -92,7 +92,7 @@ module priority_encoder #(
         );
 
         // branch
-        priority_encoder #(
+        programmable_priority_encoder #(
             .WIDTH (SPLIT),
             .SPLIT (SPLIT),
             .IMPLEMENTATION (IMPLEMENTATION)
@@ -115,4 +115,4 @@ module priority_encoder #(
     end: branch
     endgenerate
 
-endmodule: priority_encoder
+endmodule: programmable_priority_encoder

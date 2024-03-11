@@ -1,4 +1,4 @@
-module encoder_tb #(
+module programmable_priority_encoder_tb #(
     // size parameters
     int unsigned WIDTH = 4,
     int unsigned SPLIT = 2
@@ -132,4 +132,4 @@ module encoder_tb #(
     assign enc_vld =             enc_vld_h | enc_vld_l;
     assign enc_idx = enc_vld_h ? enc_idx_h : enc_idx_l;
 
-endmodule: encoder_tb
+endmodule: programmable_priority_encoder_tb

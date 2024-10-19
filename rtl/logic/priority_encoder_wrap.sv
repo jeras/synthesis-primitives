@@ -21,7 +21,7 @@ module priority_encoder_wrap #(
     if (rst)  tmp_dec_vld <= '0;
     else      tmp_dec_vld <= dec_vld;
 
-    priority_encoder #(
+    priority_encoder_tree #(
         .WIDTH (WIDTH),
         .SPLIT (SPLIT)
     ) priority_encoder (

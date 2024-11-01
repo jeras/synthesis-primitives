@@ -3,7 +3,7 @@
 // backward tree propagation,
 // implemented as a tree using recursion
 //
-// @author: Iztok Jeras <iztok.jeras@gmail.com>
+// Copyright 2025 Iztok Jeras <iztok.jeras@gmail.com>
 //
 // Licensed under CERN-OHL-P v2 or later
 ///////////////////////////////////////////////////////////////////////////////

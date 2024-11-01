@@ -2,7 +2,7 @@
 // binary to one-hot conversion (one-hot decoder),
 // base with parametrized implementation options
 //
-// @author: Iztok Jeras <iztok.jeras@gmail.com>
+// Copyright 2025 Iztok Jeras <iztok.jeras@gmail.com>
 //
 // Licensed under CERN-OHL-P v2 or later
 ///////////////////////////////////////////////////////////////////////////////

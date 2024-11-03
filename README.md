@@ -1,183 +1,56 @@
 # Synthesis primitives
 
-A quick link table for those who are looking for something specific instead of reading it all.
+The document is divided into the following sections:
 
-| SystemVerilog | VHDL | Description (link to documentation) |
-|---------------|------|-------------------------------------|
-| [`cmp_eql.sv`](rtl/cmp_eql.sv) | [`cmp_eql.vhd`](rtl/cmp_eql.vhd) | [Equality comparator]() |
-| [`bin2oht.sv`](rtl/bin2oht.sv) | [`bin2oht.vhd`](rtl/bin2oht.vhd) | [binary to one-hot conversion (decoder)]() |
-| [`oht2bin.sv`](rtl/oht2bin.sv) | [`oht2bin.vhd`](rtl/oht2bin.vhd) | [one-hot to binary conversion (simple encoder)]() |
-| [`oht2thr.sv`](rtl/oht2thr.sv) | [`oht2thr.vhd`](rtl/oht2thr.vhd) | []() |
-| [`.sv`](rtl/.sv) | [`.vhd`](rtl/.vhd) | []() |
-| [`.sv`](rtl/.sv) | [`.vhd`](rtl/.vhd) | []() |
-| [`.sv`](rtl/.sv) | [`.vhd`](rtl/.vhd) | []() |
-
-## Introduction
-
-### Overview
-
-This library focuses on basic combinational components
-described in every digital design book.
-
+- [logic primitives](doc/logic_primitives.md),
 - multiplexer,
-- decoder,
-- one-hot encoder,
-- priority encoder,
-- thermometer encoder,
-- equivalence/magnitude comparator,
-- mask/range address decoder,
-- Gray encoder/decoder,
-- shifter,
-- population count,
-- arbitration,
-- [sorting/routing network](https://en.wikipedia.org/wiki/Sorting_network).
+  - decoder/encoder,
+  - one-hot/priority/thermometer encoding,
+  - Gray encoder/decoder,
+  - equivalence comparator,
+  - population count,
+- [multiplexers](doc/multiplexers.md),
+  - shifter,
+- [arithmetic primitives](doc/arithmetic_primitives.md),
+  - magnitude comparator,
+  - adder architectures,
+  - multipliers,
+  - ...
+- [coding theory primitives](doc/coding_theory.md),
+  - SECDED,
+  - Hamming code,
+  - ...
+- [sorting networks](doc/sorting_network.md),
+- [interconnect](doc/interconnect.md)
+  - fixed priority and round-robin arbiters,
+  - mask/range address decoder,
+- [pipelining](doc/pipelining.md)
+  - synchronous/asynchronous FIFO,
+  - pipeline stages,
+  - skid buffer,
+- [memories](),
+  - memory inference,
+  - synchronous/asynchronous static RAM,
+- ...
 
-The library uses arithmetic logic (adders) in some cases,
-but different adder architectures are not the fucus of this library.
+Each section contains a variety of RTL primitives and discusses them in terms of:
 
-The focus of the library is on experimenting with
-the following coding techniques:
-
-- iterative algorithms,
-- loop unwinding and vectorization,
-- parallel prefix network structures,
-- recursion,
-- HDL coding techniques.
-
-Specific mapping of the RTL onto ASIC standard libraries and FPGA architectures during synthesis,
-is discussed only in the context of how different coding styles and parameters
-affect inference of dedicated structures:
-
-- adders (fast carry chain),
-- LUT (asynchronous read ROM).
-
-Implemented components are parameterized/generalized,
-and provided with different size/timing/power optimizations.
-
-Components are provided with a simulation,
-some with formal verification (TODO).
-
-Components are synthesized on devices from various FPGA vendors,
-and on an ASIC standard cell library (TODO).
-Synthesis is done with the aim to observe:
-
-- inference of multiplexers for FPGA and ASIC,
-- inference of fast carry chains for FPGA and ASIC (half, full adders),
-- mapping to various FPGA LUT sizes (LUT4, LUT5, LUT6),
-- mapping onto FPGA CLB (configurable logic blocks),
-- mapping onto FPGA routing hierarchy.
-
-### Nomenclature
-
-The nomenclature in literature is somehow confusing,
-the same words are often used for different things depending on context,
-which is not a problem when a single component is discussed,
-but this library attempts to discuss many related components.
-
-For example the word encoder is used as the opposite of decoder.
-It can be used specifically for the relation between one-hot and binary coding,
-or more generally for the transformation between any two codes.
-
-Another example would be the distinction between one-hot and priority multiplexer,
-the one-hot multiplexer uses a one-hot select signal,
-but the priority multiplexer uses a weighted binary select signal.
-
-There is also a lot of nomenclature overlap with coding theory,
-which covers data compression, cryptography, error detection and correction,
-data transmission and data storage,
-but is outside the scope of this library.
-
-The words code and encoding are used interchangeably,
-which is not great, a future version of this document might attempt to fix this.
-
-The following codes/encodings are defined.
-
-- `bin` - BINary ([weighted binary encoding](https://en.wikipedia.org/wiki/Binary_number)),
-- `oht` - One-HoT ([one-hot encoding](https://en.wikipedia.org/wiki/One-hot)),
-- `thr` - THeRmometer (thermometer encoding)
-- `pry` - PRioritY (priority encoding)
-
-Verilog/SystemVerilog syntax is used predominantly,
-except when explicitly discussing VHDL implementations.
-SystemVerilog is also used instead of mathematical notation,
-since it is easier to interpret in the given context (RTL library).
-
-The same number can be represented by different encodings.
-The binary encoding is compact, it requires `$clog2(WIDTH)` bits to represent numbers in the range `0:WIDTH-1`.
-One-hot, thermometer and priority encodings are verbose, they require `WIDTH` bits for the same range.
-
-The following table shows the decimal number `i=3` coded in different formats,
-all sized to allow the representation of numbers in the range `0:WIDTH-1` where `WIDTH=8`.
-In binary, the number is represented with a `$clog2(WIDTH)=3` long vector,
-while other encodings use a `WIDTH=8` long vector.
-
-| encoding     | example literal | comment |
-|--------------|-----------------|---------|
-| `bin[3-1:0]` | `3'b011`/`3'd3` |         |
-| `oht[8-1:0]` | `8'b00001000`   | the `i`-th bit is set `oth[i]=1'b1` the others are cleared |
-| `thr[8-1:0]` | `8'b11111000`   | the `i`-th bit is set `oth[i]=1'b1` the bits below are cleared and bits above are set |
-| `pry[8-1:0]` | `8'bXXXX1000`   | the `i`-th bit is set `oth[i]=1'b1` the bits below are cleared are undefined (can have any value) |
-
-The one-hot and thermometer encodings are a subset of the priority encoding.
-
-### Parameterization/generalization
-
-The library is fully parameterized/generalized in terms of vector width,
-but the vectors are always in descending range order with the rightmost LSB bit having the highest priority.
-This order restriction is chosen so that the carry in linear implementations (see code examples)
-propagates from right to left allowing inference of adders by synthesis tools.
-This order is also the most common in modern research papers and implementations.
-
-For use cases where the opposite priority order is desired (not common in modern designs),
-the user can reorder the input/output vectors, but handling the binary encoding would take more effort.
-
-TODO: think through the best unpacked array range order, for memories it is usually ascending.
-
-The diagrams also try to match the same orientation and order as bit vectors.
-
-### Complexity
-
-| problem (solution)      | size   | timing    |
-|-------------------------|--------|-----------|
-| bitwise                 | O(n)   | O(C)      |
-| reduction (chain)       | O(n)   | O(n)      |
-| reduction (tree)        | O(n)   | O(log(n)) |
-| parallel prefix (chain) | O(n)   | O(n)      |
-| parallel prefix (tree)  | O(n)   | O(log(n)) |
-| non associative (chain) | O(n)   | O(n)      |
-
-#### Linear versus tree structure
-
-One of the aims of this document is to showcase the difference
-between implementing a combinational logic problem as
-a linear structure (carry chain) or tree structure (hierarchy).
-
-Logic blocks will be drawn horizontally, the way adders are usually drawn.
-The blocks are a rectangle `WIDHT` wide and either `WIDTH_LOG=$clog2(WIDTH)` or `1` deep,
-depending on the reduction operation performed by the block.
-
-Just for this chapter, the signals connected to the block will be named as:
-
-- perpendicular (`per_i/o`) vector of `WIDTH` bits and
-- lateral (`lat_i/o`) vector of `WIDTH_LOG` bits or scalar.
-
-![Block with logarithmic reduction.](doc/block_reduction_log.svg)
-
-![Block with reduction to scalar.](doc/block_reduction_one.svg)
-
-Basic building blocks are simple and only handle short vectors.
-ASIC examples would be 2/3/4-input AND/OR gates, ...
-FPGA examples would be LUT4/5/6 and CLBs.
-
-The following two chapters provide a general overview of the two structures,
-explaining some advantages and disadvantages.
-
-| property          | linear   | tree          |
-|-------------------|----------|---------------|
-| logic area        | O(WIDTH) | O(WIDTH)      |
-| routing length    | O(1)     | O(WIDTH)      |
-| propagation delay | O(WIDTH) | O(log(WIDTH)) |
-| power consumption | TBD      | TBD           |
+- **syntax**
+  - Verilog, SystemVerilog and VHDL syntax,
+  - parameterization/generalization,
+  - inference,
+  - iterative algorithms,
+  - loop unwinding and vectorization,
+  - recursion,
+- **simulation**,
+  - simulating combinational/sequential circuits,
+  - achieving good coverage,
+- **synthesis**
+  -- timing/area complexity
+  - timing/area/power optimizations/compromises,
+  - parallel prefix network structures,
+  - ASIC specific optimizations,
+  - FPGA specific optimizations (fast carry chains, LUT size, ...).
 
 ##### Linear structure
 

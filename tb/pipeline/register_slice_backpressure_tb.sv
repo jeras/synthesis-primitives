@@ -8,8 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 module register_slice_backpressure_tb #(
-    // size parameters
-    int unsigned WIDTH = 8
+    type DAT_T = logic [8-1:0]
 );
 
     // clock period
@@ -20,17 +19,6 @@ module register_slice_backpressure_tb #(
     logic rst = 1'b1;  // reset
 
     // data type
-    localparam type DAT_T = logic [WIDTH-1:0];
-
-    // check enable depending on test
-    struct packed {
-        bit shift;      // 3
-        bit power;      // 2
-        bit loop;       // 1
-    } check_enable;
-
-    // timing constant
-    localparam time T = 10ns;
 
     // RX interface
     logic rx_vld;  // valid
@@ -38,13 +26,23 @@ module register_slice_backpressure_tb #(
     logic rx_rdy;  // ready
 
     // TX interface
-    logic rx_vld;  // valid
-    DAT_T rx_dat;  // data
-    logic rx_rdy;  // ready
+    logic tx_vld;  // valid
+    DAT_T tx_dat;  // data
+    logic tx_rdy;  // ready
+
+    // wait for a number of clock periods
+    task automatic clk_period (int unsigned num);
+        repeat(num) @(posedge clk);
+        #1;  // TODO: the unit delay is only here as a workaround for a Verilator bug
+    endtask: clk_period
 
 ///////////////////////////////////////////////////////////////////////////////
 // test
 ///////////////////////////////////////////////////////////////////////////////
+
+    // clock
+    initial       clk = 1'b1;
+    always #(T/2) clk = ~clk;
 
     // test sequence
     /* verilator lint_off INITIALDLY */
@@ -56,32 +54,32 @@ module register_slice_backpressure_tb #(
         tx_rdy <= 1'b1;
         // T0 (reset)
         rst <= 1'b1;
-        repeat(1) @(posedge clk);
+        clk_period(1);
         // T1
         rst <= 1'b0;
-        repeat(1) @(posedge clk);
+        clk_period(1);
         // T2
         rx_vld <= 1'b1;
-        rx_dat <= 8X"00";
+        rx_dat <= DAT_T'(0);
         tx_rdy <= 1'b0;
-        repeat(1) @(posedge clk);
+        clk_period(1);
         // T3
-        repeat(1) @(posedge clk);
+        clk_period(1);
         // T4
         tx_rdy <= 1'b1;
-        repeat(1) @(posedge clk);
-        assert (tx_dat = DAT_T'(0)) else $error("Step 5: TX data mismatch");
+        clk_period(1);
+        assert (tx_dat == DAT_T'(0)) else $error("Step 5: TX data mismatch");
         // T5
         rx_vld <= 1'b1;
-        rx_dat <= 8X"01";
+        rx_dat <= DAT_T'(1);
         tx_rdy <= 1'b1;
-        repeat(1) @(posedge clk);
-        assert (tx_dat = DAT_T'(1)) else $error("Step 6: TX data mismatch");
+        clk_period(1);
+        assert (tx_dat == DAT_T'(1)) else $error("Step 6: TX data mismatch");
         // T6
         rx_vld <= 1'b0;
         rx_dat <= 'x;
         tx_rdy <= 1'b0;
-        repeat(1) @(posedge clk);
+        clk_period(1);
 
         // end simulation
         $finish;
@@ -103,9 +101,9 @@ module register_slice_backpressure_tb #(
         .rx_dat (rx_dat),
         .rx_rdy (rx_rdy),
         // TX interface
-        .rx_vld (rx_vld),
-        .rx_dat (rx_dat),
-        .rx_rdy (rx_rdy)
+        .tx_vld (tx_vld),
+        .tx_dat (tx_dat),
+        .tx_rdy (tx_rdy)
     );
     
 ///////////////////////////////////////////////////////////////////////////////

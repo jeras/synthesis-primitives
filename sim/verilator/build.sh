@@ -25,7 +25,7 @@ TOPS=(
 )
 
 # override to debug a single testcase
-TOPS=("register_slice_backpressure_tb")
+TOPS=("register_slice_datapath_tb")
 
 CONF=" -Wno-INITIALDLY"
 CONF+=" -Wno-UNOPTFLAT"

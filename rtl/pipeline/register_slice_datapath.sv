@@ -18,9 +18,9 @@ module register_slice_datapath #(
     input  DAT_T rx_dat,  // data
     output logic rx_rdy,  // ready
     // TX interface
-    output logic rx_vld,  // valid
-    output DAT_T rx_dat,  // data
-    input  logic rx_rdy   // ready
+    output logic tx_vld,  // valid
+    output DAT_T tx_dat,  // data
+    input  logic tx_rdy   // ready
 );
 
     // transfer signals

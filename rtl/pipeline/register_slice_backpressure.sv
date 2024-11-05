@@ -18,14 +18,17 @@ module register_slice_backpressure #(
     input  DAT_T rx_dat,  // data
     output logic rx_rdy,  // ready
     // TX interface
-    output logic rx_vld,  // valid
-    output DAT_T rx_dat,  // data
-    input  logic rx_rdy   // ready
+    output logic tx_vld,  // valid
+    output DAT_T tx_dat,  // data
+    input  logic tx_rdy   // ready
 );
 
     // transfer signals
     logic rx_trn;
     logic tx_trn;
+
+    // local data
+    DAT_T ls_dat;
 
     // transfer
     assign rx_trn = rx_vld & rx_rdy;
@@ -34,7 +37,7 @@ module register_slice_backpressure #(
     // handshake (asynchronous reset)
     always_ff @(posedge clk, posedge rst)
     if (rst) begin
-        tx_rdy <= 1'b0;
+        rx_rdy <= 1'b0;
     end else begin
         if (tx_vld) begin
             rx_rdy <= tx_rdy;

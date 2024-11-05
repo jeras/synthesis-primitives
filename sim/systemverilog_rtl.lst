@@ -79,6 +79,18 @@
 #../../rtl/multiplexer/barrel_shifter.sv
 
 ###############################################################################
+# pipeline
+###############################################################################
+
+# register slices
+../../rtl/pipeline/register_slice_backpressure.sv
+../../rtl/pipeline/register_slice_datapath.sv
+../../rtl/pipeline/register_slice.sv
+
+# FIFOs
+#../../rtl/pipeline/fifo_synchronous.sv
+
+###############################################################################
 # mixed
 ###############################################################################
 

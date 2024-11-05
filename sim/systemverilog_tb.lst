@@ -50,6 +50,18 @@
 ../../tb/multiplexer/mux_bin_tb.sv
 
 ###############################################################################
+# pipeline
+###############################################################################
+
+# register slices
+../../tb/pipeline/register_slice_backpressure_tb.sv
+../../tb/pipeline/register_slice_datapath_tb.sv
+#../../tb/pipeline/register_slice_tb.sv
+
+# FIFOs
+#../../tb/pipeline/fifo_synchronous_tb.sv
+
+###############################################################################
 # mixed
 ###############################################################################
 

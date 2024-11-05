@@ -11,5 +11,5 @@ vsim encoder.mpf
 
 Compiling with `qrun`:
 ```sh
-qrun -f ../files_rtl.lst -f ../files_tb.lst
+qrun -f ../systemverilog_rtl.lst -f ../systemverilog_tb.lst -f ../vhdl_rtl.lst -f ../vhdl_tb.lst
 ```

@@ -1,0 +1,8 @@
+###############################################################################
+# pipeline
+###############################################################################
+
+../../rtl/pipeline/register_slice_backpressure.vhd
+../../rtl/pipeline/register_slice_datapath.vhd
+../../rtl/pipeline/register_slice.vhd
+../../rtl/pipeline/fifo_synchronous.vhd

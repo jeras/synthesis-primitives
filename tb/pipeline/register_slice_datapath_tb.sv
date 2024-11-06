@@ -30,12 +30,6 @@ module register_slice_datapath_tb #(
     DAT_T tx_dat;  // data
     logic tx_rdy;  // ready
 
-    // wait for a number of clock periods
-    task automatic clk_period (int unsigned num);
-        repeat(num) @(posedge clk);
-        #1;  // TODO: the unit delay is only here as a workaround for a Verilator bug
-    endtask: clk_period
-
 ///////////////////////////////////////////////////////////////////////////////
 // test
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,14 +47,14 @@ module register_slice_datapath_tb #(
         tx_rdy = 1'b1;
         // T0 (reset)
         rst = 1'b1;
-        clk_period(1);
+        @(posedge clk);
         // T1
         rst <= 1'b0;
-        clk_period(1);
+        @(posedge clk);
         // T2
         rx_vld <= 1'b1;
         rx_dat <= DAT_T'(0);
-        clk_period(1);
+        @(posedge clk);
         // T3
         rx_vld <= 1'b1;
         rx_dat <= DAT_T'(1);
@@ -70,16 +64,17 @@ module register_slice_datapath_tb #(
         rx_vld <= 1'b0;
         rx_dat <= 'x;
         tx_rdy <= 1'b0;
-        clk_period(1);
+        @(posedge clk);
         // T5
         tx_rdy <= 1'b1;
         @(posedge clk);
         assert (tx_dat == DAT_T'(1)) else $error("Step 5: TX data mismatch");
         // T6
         tx_rdy <= 1'b1;
-        clk_period(1);
+        @(posedge clk);
 
         // end simulation
+        $display("SUCCESS running %m");
         $finish;
     end
 

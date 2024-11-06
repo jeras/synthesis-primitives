@@ -30,12 +30,6 @@ module register_slice_backpressure_tb #(
     DAT_T tx_dat;  // data
     logic tx_rdy;  // ready
 
-    // wait for a number of clock periods
-    task automatic clk_period (int unsigned num);
-        repeat(num) @(posedge clk);
-        #1;  // TODO: the unit delay is only here as a workaround for a Verilator bug
-    endtask: clk_period
-
 ///////////////////////////////////////////////////////////////////////////////
 // test
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,34 +48,35 @@ module register_slice_backpressure_tb #(
         tx_rdy <= 1'b1;
         // T0 (reset)
         rst <= 1'b1;
-        clk_period(1);
+        @(posedge clk);
         // T1
         rst <= 1'b0;
-        clk_period(1);
+        @(posedge clk);
         // T2
         rx_vld <= 1'b1;
         rx_dat <= DAT_T'(0);
         tx_rdy <= 1'b0;
-        clk_period(1);
+        @(posedge clk);
         // T3
-        clk_period(1);
+        @(posedge clk);
         // T4
         tx_rdy <= 1'b1;
-        clk_period(1);
+        @(posedge clk);
         assert (tx_dat == DAT_T'(0)) else $error("Step 5: TX data mismatch");
         // T5
         rx_vld <= 1'b1;
         rx_dat <= DAT_T'(1);
         tx_rdy <= 1'b1;
-        clk_period(1);
+        @(posedge clk);
         assert (tx_dat == DAT_T'(1)) else $error("Step 6: TX data mismatch");
         // T6
         rx_vld <= 1'b0;
         rx_dat <= 'x;
         tx_rdy <= 1'b0;
-        clk_period(1);
+        @(posedge clk);
 
         // end simulation
+        $display("SUCCESS running %m");
         $finish;
     end
     /* verilator lint_on INITIALDLY */

@@ -47,7 +47,7 @@ begin
 
 backpressure: if ENABLE_BACKPRESSURE generate
 
-    register_slice_backpressure : entity work.register_slice_backpressure
+    backpressure : entity work.register_slice_backpressure
     generic map (
         DAT_T => DAT_T
     )
@@ -80,7 +80,7 @@ end generate backpressure;
 
 datapath: if ENABLE_DATAPATH generate
 
-    register_slice_datapath : entity work.register_slice_datapath
+    datapath : entity work.register_slice_datapath
     generic map (
         DAT_T => DAT_T
     )

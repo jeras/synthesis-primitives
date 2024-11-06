@@ -2,7 +2,7 @@
 
 The document is divided into the following sections:
 
-- [logic primitives](doc/logic_primitives.md),
+- [logic primitives](doc/logic.md),
 - multiplexer,
   - decoder/encoder,
   - one-hot/priority/thermometer encoding,
@@ -11,24 +11,24 @@ The document is divided into the following sections:
   - population count,
 - [multiplexers](doc/multiplexers.md),
   - shifter,
-- [arithmetic primitives](doc/arithmetic_primitives.md),
+- [arithmetic primitives](doc/arithmetic.md),
   - magnitude comparator,
   - adder architectures,
   - multipliers,
   - ...
-- [coding theory primitives](doc/coding_theory.md),
+- [coding theory primitives](doc/coding.md),
   - SECDED,
   - Hamming code,
   - ...
-- [sorting networks](doc/sorting_network.md),
+- [sorting networks](doc/sorting.md),
 - [interconnect](doc/interconnect.md)
   - fixed priority and round-robin arbiters,
   - mask/range address decoder,
-- [pipelining](doc/pipelining.md)
+- [pipelining](doc/pipeline.md)
   - synchronous/asynchronous FIFO,
   - pipeline stages,
   - skid buffer,
-- [memories](),
+- [memories](doc/memory.md),
   - memory inference,
   - synchronous/asynchronous static RAM,
 - ...

@@ -19,13 +19,13 @@ entity register_slice_backpressure is
         clk    : in  std_logic;  -- clock
         rst    : in  std_logic;  -- reset
         -- receiver interface
-        rx_vld : in  std_logic;
-        rx_dat : in  DAT_T;
-        rx_rdy : out std_logic;
+        rx_vld : in  std_logic;  -- valid
+        rx_dat : in  DAT_T;      -- data
+        rx_rdy : out std_logic;  -- ready
         -- transmitter interface
-        tx_vld : out std_logic;
-        tx_dat : out DAT_T;
-        tx_rdy : in  std_logic
+        tx_vld : out std_logic;  -- valid
+        tx_dat : out DAT_T;      -- data
+        tx_rdy : in  std_logic   -- ready
     );
 end register_slice_backpressure;
 

@@ -41,19 +41,66 @@ architecture testbench of register_slice_datapath_tb is
     signal tx_dat : DAT_T;
     signal tx_rdy : std_logic := '0';
 
-   -- clock period
-   procedure clk_period (
-      constant num : in natural := 1
-   ) is
-   begin
-      for i in 0 to num-1 loop
-         wait until rising_edge(clk);
-      end loop;
-   end clk_period;
-
 begin
 
-    -- DUT instance
+-------------------------------------------------------------------------------
+-- test
+-------------------------------------------------------------------------------
+
+    -- clock source
+    clock : process
+    begin
+        loop
+            clk <= '1'; wait for T/2;
+            clk <= '0'; wait for T/2;
+        end loop;
+    end process clock;
+
+    -- test sequence
+    test : process
+    begin
+        -- skip clock edge at time zero
+        wait for 0 ns;
+        -- TX/RX init
+        rx_vld <= '0';
+        rx_dat <= (others => 'X');
+        tx_rdy <= '1';
+        -- T0 (reset)
+        rst <= '1';
+        wait until rising_edge(clk);
+        -- T1
+        rst <= '0';
+        wait until rising_edge(clk);
+        -- T2
+        rx_vld <= '1';
+        rx_dat <= 8X"00";
+        wait until rising_edge(clk);
+        -- T3
+        rx_vld <= '1';
+        rx_dat <= 8X"01";
+        wait until rising_edge(clk);
+        assert (tx_dat = 8X"00") report "Step 3: TX data mismatch" severity ERROR;
+        -- T4
+        rx_vld <= '0';
+        rx_dat <= (others => 'X');
+        tx_rdy <= '0';
+        wait until rising_edge(clk);
+        -- T5
+        tx_rdy <= '1';
+        wait until rising_edge(clk);
+        assert (tx_dat = 8X"01") report "Step 5: TX data mismatch" severity ERROR;
+        -- T6
+        tx_rdy <= '1';
+        wait until rising_edge(clk);
+
+        -- end simulation
+        finish;
+    end process test;
+
+-------------------------------------------------------------------------------
+-- DUT instance
+-------------------------------------------------------------------------------
+
     dut : entity work.register_slice_datapath
     generic map (
         DAT_T => DAT_T
@@ -71,56 +118,6 @@ begin
         tx_dat => tx_dat,
         tx_rdy => tx_rdy
     );
-
-    -- clock source
-    clock : process
-    begin
-        loop
-            clk <= '1'; wait for T/2;
-            clk <= '0'; wait for T/2;
-        end loop;
-    end process clock;
-
-    -- test sequence
-    test : process
-    begin
-        -- TX/RX init
-        rx_vld <= '0';
-        rx_dat <= (others => 'X');
-        tx_rdy <= '1';
-        -- T0 (reset)
-        rst <= '1';
-        wait for 0 ns;
-        clk_period(1);
-        -- T1
-        rst <= '0';
-        clk_period(1);
-        -- T2
-        rx_vld <= '1';
-        rx_dat <= 8X"00";
-        clk_period(1);
-        -- T3
-        rx_vld <= '1';
-        rx_dat <= 8X"01";
-        clk_period(1);
-        assert (tx_dat = 8X"00") report "Step 3: TX data mismatch" severity ERROR;
-        -- T4
-        rx_vld <= '0';
-        rx_dat <= (others => 'X');
-        tx_rdy <= '0';
-        clk_period(1);
-        -- T5
-        tx_rdy <= '1';
-        clk_period(1);
-        assert (tx_dat = 8X"01") report "Step 5: TX data mismatch" severity ERROR;
-        -- T6
-        tx_rdy <= '1';
-        clk_period(1);
-        wait for 0 ns;
-
-        -- end simulation
-        finish;
-    end process test;
 
 end testbench;
 

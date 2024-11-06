@@ -12,8 +12,8 @@ use ieee.std_logic_1164.all;
 entity register_slice is
     generic (
         -- configuration
-        ENABLE_BACKPRESSURE : boolean := false;  -- enable backpressure register
-        ENABLE_DATAPATH     : boolean := true;   -- enable data path register
+        ENABLE_BACKPRESSURE : boolean := true;  -- enable backpressure register
+        ENABLE_DATAPATH     : boolean := true;  -- enable data path register
         -- data type
         type DAT_T
     );
@@ -22,22 +22,22 @@ entity register_slice is
         clk    : in  std_logic;  -- clock
         rst    : in  std_logic;  -- reset
         -- receiver interface
-        rx_vld : in  std_logic;
-        rx_dat : in  DAT_T;
-        rx_rdy : out std_logic;
+        rx_vld : in  std_logic;  -- valid
+        rx_dat : in  DAT_T;      -- data
+        rx_rdy : out std_logic;  -- ready
         -- transmitter interface
-        tx_vld : out std_logic;
-        tx_dat : out DAT_T;
-        tx_rdy : in  std_logic
+        tx_vld : out std_logic;  -- valid
+        tx_dat : out DAT_T;      -- data
+        tx_rdy : in  std_logic   -- ready
     );
 end register_slice;
 
 architecture rtl of register_slice is
 
     -- middle stream signals
-    signal md_vld : std_logic;
-    signal md_dat : DAT_T;
-    signal md_rdy : std_logic;
+    signal md_vld : std_logic;  -- valid
+    signal md_dat : DAT_T;      -- data
+    signal md_rdy : std_logic;  -- ready
 
 begin
 

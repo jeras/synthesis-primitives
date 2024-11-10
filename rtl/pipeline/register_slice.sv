@@ -8,8 +8,8 @@
 
 module register_slice #(
     // configuration
-    parameter bit ENABLE_BACKPRESSURE = 1'b1;  // enable backpressure register
-    parameter bit ENABLE_DATAPATH     = 1'b1;  // enable data path register
+    parameter bit ENABLE_BACKPRESSURE = 1'b1,  // enable backpressure register
+    parameter bit ENABLE_DATAPATH     = 1'b1,  // enable data path register
     // data type
     parameter type DAT_T = logic [8-1:0]
 )(
@@ -30,8 +30,6 @@ module register_slice #(
     logic md_vld;  // valid
     DAT_T md_dat;  // data
     logic md_rdy;  // ready
-
-begin
 
 ///////////////////////////////////////////////////////////////////////////////
 // backward path (backpressure) register
@@ -57,14 +55,15 @@ begin: backpressure
         .tx_rdy (md_rdy)
     );
 
-end else begin
+end: backpressure
+else begin: backpressure_bypass
 
     // combinational passthrough mode
     assign md_vld = rx_vld;
     assign md_dat = rx_dat;
     assign rx_rdy = md_rdy;
 
-end: backpressure
+end: backpressure_bypass
 endgenerate
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,14 +90,15 @@ begin: datapath
         .tx_rdy (tx_rdy)
     );
 
-end else begin
+end: datapath
+else begin: datapath_bypass
 
     // combinational passthrough mode
-    assign tx_vld <= md_vld;
-    assign tx_dat <= md_dat;
-    assign md_rdy <= tx_rdy;
+    assign tx_vld = md_vld;
+    assign tx_dat = md_dat;
+    assign md_rdy = tx_rdy;
 
-end: datapath
+end: datapath_bypass
 endgenerate
 
-end rtl;
+endmodule: register_slice

@@ -1,0 +1,8 @@
+###############################################################################
+# pipeline
+###############################################################################
+
+register_slice_backpressure_tb
+register_slice_datapath_tb
+#register_slice_tb
+#fifo_synchronous_tb

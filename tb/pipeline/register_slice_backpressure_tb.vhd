@@ -95,6 +95,7 @@ begin
         wait until rising_edge(clk);
 
         -- end simulation
+        report "SUCCESS running " & test'path_name severity NOTE;
         finish;
     end process test;
 

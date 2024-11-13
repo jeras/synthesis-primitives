@@ -54,12 +54,16 @@
 ###############################################################################
 
 # register slices
-../../tb/pipeline/register_slice_backpressure_tb.sv
-../../tb/pipeline/register_slice_datapath_tb.sv
-#../../tb/pipeline/register_slice_tb.sv
+../../tb/handshake/register_slice_backpressure_tb.sv
+../../tb/handshake/register_slice_datapath_tb.sv
+#../../tb/handshake/register_slice_tb.sv
+
+###############################################################################
+# stream
+###############################################################################
 
 # FIFOs
-#../../tb/pipeline/fifo_synchronous_tb.sv
+#../../tb/stream/fifo_synchronous_tb.sv
 
 ###############################################################################
 # mixed

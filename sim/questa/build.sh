@@ -23,7 +23,7 @@ done
 TOPS=`sed '/^[[:blank:]]*#/d;s/#.*//' ../vhdl_top.lst`
 
 # override to debug a single testcase
-TOPS=("register_slice_datapath_tb")
+TOPS=("register_slice_backpressure_tb")
 
 OPTIONS="-2008"
 

@@ -1,8 +1,15 @@
 ###############################################################################
-# pipeline
+# handshake
 ###############################################################################
 
-../../rtl/pipeline/register_slice_backpressure.vhd
-../../rtl/pipeline/register_slice_datapath.vhd
-../../rtl/pipeline/register_slice.vhd
-../../rtl/pipeline/fifo_synchronous.vhd
+# register slices
+../../rtl/handshake/register_slice_backpressure.vhd
+../../rtl/handshake/register_slice_datapath.vhd
+../../rtl/handshake/register_slice.vhd
+
+###############################################################################
+# stream
+###############################################################################
+
+# FIFOs
+../../rtl/stream/fifo_synchronous.vhd

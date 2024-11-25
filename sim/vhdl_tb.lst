@@ -1,8 +1,15 @@
 ###############################################################################
-# pipeline
+# handshake
 ###############################################################################
 
+# register slices
 ../../tb/pipeline/register_slice_backpressure_tb.vhd
 ../../tb/pipeline/register_slice_datapath_tb.vhd
 #../../tb/pipeline/register_slice_tb.vhd
+
+###############################################################################
+# stream
+###############################################################################
+
+# FIFOs
 #../../tb/pipeline/fifo_synchronous_tb.vhd

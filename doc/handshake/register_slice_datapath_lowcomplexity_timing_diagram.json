@@ -1,0 +1,21 @@
+{"signal": [
+  {"name": "clk", "wave": "P......."},
+  {"name": "rst", "wave": "10......"},
+['RX',
+  {"name": "vld", "wave": "0.1.0..."},
+  {"name": "dat", "wave": "x.==x...", "data": ["D0", "D1"]},
+  {"name": "rdy", "wave": "1...01.."},
+],
+['TX',
+  {"name": "vld", "wave": "0..1..0."},
+  {"name": "dat", "wave": "x..==.x.", "data": ["D0", "D1"]},
+  {"name": "rdy", "wave": "1...010."},
+],
+],
+head: {
+  tock: 0,
+},
+foot: {
+  text: 'Datapath register slice (low complexity) timing diagram',
+},
+}

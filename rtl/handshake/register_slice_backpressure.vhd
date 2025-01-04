@@ -11,8 +11,10 @@ use ieee.std_logic_1164.all;
 
 entity register_slice_backpressure is
     generic (
-        -- data type
-        type DAT_T
+        -- data type and reset value
+        type DAT_TYP;
+        DAT_RST : DAT_TYP
+        -- 'X' synthesizes into a datapath without reset
     );
     port (
         -- system signals
@@ -20,11 +22,11 @@ entity register_slice_backpressure is
         rst    : in  std_logic;  -- reset
         -- receiver interface
         rx_vld : in  std_logic;  -- valid
-        rx_dat : in  DAT_T;      -- data
+        rx_dat : in  DAT_TYP;    -- data
         rx_rdy : out std_logic;  -- ready
         -- transmitter interface
         tx_vld : out std_logic;  -- valid
-        tx_dat : out DAT_T;      -- data
+        tx_dat : out DAT_TYP;    -- data
         tx_rdy : in  std_logic   -- ready
     );
 end register_slice_backpressure;
@@ -35,7 +37,7 @@ architecture rtl of register_slice_backpressure is
     signal rx_trn : std_logic;
     signal tx_trn : std_logic;
     -- local signals/registers
-    signal ls_dat : DAT_T;
+    signal ls_dat : DAT_TYP;
 
 begin
 
@@ -58,7 +60,9 @@ begin
     -- data path register (without reset)
     data: process(clk)
     begin
-        if rising_edge(clk) then
+        if (rst = '1') then
+            ls_dat <= DAT_RST;
+        elsif rising_edge(clk) then
             if ((rx_trn and (not tx_rdy)) = '1') then
                 ls_dat <= rx_dat;
             end if;

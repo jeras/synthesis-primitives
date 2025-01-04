@@ -4,7 +4,10 @@
 FILES=`sed '/^[[:blank:]]*#/d;s/#.*//' ../vhdl_rtl.lst ../vhdl_tb.lst`
 
 # list of top level entity
-TOPS=`sed '/^[[:blank:]]*#/d;s/#.*//' ../vhdl_top.lst`
+TOPLIST=`sed '/^[[:blank:]]*#/d;s/#.*//' ../vhdl_top.lst`
+
+# if a list of top modules is not provided as an argument, use the default
+TOPS=${@:-$TOPLIST}
 
 for TOP in ${TOPS[@]}
 do

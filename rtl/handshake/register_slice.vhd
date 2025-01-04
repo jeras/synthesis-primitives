@@ -14,8 +14,10 @@ entity register_slice is
         -- configuration
         ENABLE_BACKPRESSURE : boolean := true;  -- enable backpressure register
         ENABLE_DATAPATH     : boolean := true;  -- enable data path register
-        -- data type
-        type DAT_T
+        -- data type and reset value
+        type DAT_TYP;
+        DAT_RST : DAT_TYP
+        -- 'X' synthesizes into a datapath without reset
     );
     port (
         -- system signals
@@ -23,11 +25,11 @@ entity register_slice is
         rst    : in  std_logic;  -- reset
         -- receiver interface
         rx_vld : in  std_logic;  -- valid
-        rx_dat : in  DAT_T;      -- data
+        rx_dat : in  DAT_TYP;      -- data
         rx_rdy : out std_logic;  -- ready
         -- transmitter interface
         tx_vld : out std_logic;  -- valid
-        tx_dat : out DAT_T;      -- data
+        tx_dat : out DAT_TYP;      -- data
         tx_rdy : in  std_logic   -- ready
     );
 end register_slice;
@@ -36,7 +38,7 @@ architecture rtl of register_slice is
 
     -- middle stream signals
     signal md_vld : std_logic;  -- valid
-    signal md_dat : DAT_T;      -- data
+    signal md_dat : DAT_TYP;      -- data
     signal md_rdy : std_logic;  -- ready
 
 begin
@@ -49,7 +51,8 @@ backpressure: if ENABLE_BACKPRESSURE generate
 
     backpressure : entity work.register_slice_backpressure
     generic map (
-        DAT_T => DAT_T
+        DAT_TYP => DAT_TYP,
+        DAT_RST => DAT_RST
     )
     port map (
         -- system signals
@@ -82,7 +85,8 @@ datapath: if ENABLE_DATAPATH generate
 
     datapath : entity work.register_slice_datapath
     generic map (
-        DAT_T => DAT_T
+        DAT_TYP => DAT_TYP,
+        DAT_RST => DAT_RST
     )
     port map (
         -- system signals

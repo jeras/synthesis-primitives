@@ -7,28 +7,30 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 module register_slice_backpressure #(
-    // data type
-    parameter type DAT_T = logic [8-1:0]
+    // data type and reset value
+    parameter type    DAT_TYP = logic [8-1:0],
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
+    // the default synthesizes into a datapath without reset
 )(
     // system signals
-    input  logic clk,  // clock
-    input  logic rst,  // reset
+    input  logic   clk,  // clock
+    input  logic   rst,  // reset
     // RX interface
-    input  logic rx_vld,  // valid
-    input  DAT_T rx_dat,  // data
-    output logic rx_rdy,  // ready
+    input  logic   rx_vld,  // valid
+    input  DAT_TYP rx_dat,  // data
+    output logic   rx_rdy,  // ready
     // TX interface
-    output logic tx_vld,  // valid
-    output DAT_T tx_dat,  // data
-    input  logic tx_rdy   // ready
+    output logic   tx_vld,  // valid
+    output DAT_TYP tx_dat,  // data
+    input  logic   tx_rdy   // ready
 );
 
     // transfer signals
-    logic rx_trn;
-    logic tx_trn;
+    logic   rx_trn;
+    logic   tx_trn;
 
     // local data
-    DAT_T ls_dat;
+    DAT_TYP ls_dat;
 
     // transfer
     assign rx_trn = rx_vld & rx_rdy;
@@ -45,12 +47,16 @@ module register_slice_backpressure #(
     end
 
     // data path register (without reset)
-    always_ff @(posedge clk)
-    if (rx_trn & ~tx_rdy) begin
-        ls_dat <= rx_dat;
+    always_ff @(posedge clk, posedge rst)
+    if (rst) begin
+        ls_dat <= DAT_RST;
+    end else begin
+        if (rx_trn & ~tx_rdy) begin
+            ls_dat <= rx_dat;
+        end
     end
 
-    // combinational logic
+    // combinational TX valid/data
     assign tx_vld = rx_rdy ? rx_vld : 1'b1;
     assign tx_dat = rx_rdy ? rx_dat : ls_dat;
 

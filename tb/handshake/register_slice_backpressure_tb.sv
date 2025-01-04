@@ -8,7 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 module register_slice_backpressure_tb #(
-    type DAT_T = logic [8-1:0]
+    // data type and reset value
+    parameter type    DAT_TYP = logic [8-1:0],
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
 );
 
     // clock period
@@ -18,17 +20,15 @@ module register_slice_backpressure_tb #(
     logic clk = 1'b0;  // clock
     logic rst = 1'b1;  // reset
 
-    // data type
-
     // RX interface
-    logic rx_vld;  // valid
-    DAT_T rx_dat;  // data
-    logic rx_rdy;  // ready
+    logic   rx_vld;  // valid
+    DAT_TYP rx_dat;  // data
+    logic   rx_rdy;  // ready
 
     // TX interface
-    logic tx_vld;  // valid
-    DAT_T tx_dat;  // data
-    logic tx_rdy;  // ready
+    logic   tx_vld;  // valid
+    DAT_TYP tx_dat;  // data
+    logic   tx_rdy;  // ready
 
 ///////////////////////////////////////////////////////////////////////////////
 // test
@@ -54,7 +54,7 @@ module register_slice_backpressure_tb #(
         @(posedge clk);
         // T2
         rx_vld <= 1'b1;
-        rx_dat <= DAT_T'(0);
+        rx_dat <= DAT_TYP'(0);
         tx_rdy <= 1'b0;
         @(posedge clk);
         // T3
@@ -62,13 +62,13 @@ module register_slice_backpressure_tb #(
         // T4
         tx_rdy <= 1'b1;
         @(posedge clk);
-        assert (tx_dat == DAT_T'(0)) else $error("Step 5: TX data mismatch");
+        assert (tx_dat == DAT_TYP'(0)) else $error("Step 5: TX data mismatch");
         // T5
         rx_vld <= 1'b1;
-        rx_dat <= DAT_T'(1);
+        rx_dat <= DAT_TYP'(1);
         tx_rdy <= 1'b1;
         @(posedge clk);
-        assert (tx_dat == DAT_T'(1)) else $error("Step 6: TX data mismatch");
+        assert (tx_dat == DAT_TYP'(1)) else $error("Step 6: TX data mismatch");
         // T6
         rx_vld <= 1'b0;
         rx_dat <= 'x;
@@ -86,7 +86,8 @@ module register_slice_backpressure_tb #(
 ///////////////////////////////////////////////////////////////////////////////
 
     register_slice_backpressure #(
-        .DAT_T (DAT_T)
+        .DAT_TYP (DAT_TYP),
+        .DAT_RST (DAT_RST)
     ) dut (
         // system signals
         .clk    (clk),

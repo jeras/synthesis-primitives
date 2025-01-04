@@ -25,20 +25,25 @@ architecture testbench of register_slice_datapath_tb is
     constant T : time := 10.0 ns;
 
     -- system signals
-    signal clk   : std_logic := '0';  -- clock
-    signal rst   : std_logic := '1';  -- reset
+    signal clk : std_logic := '0';  -- clock
+    signal rst : std_logic := '1';  -- reset
+    signal cnt : integer := 0;  -- clock cycle counter
 
-    -- data type
-    subtype DAT_T is std_logic_vector(WIDTH-1 downto 0);
+    -- data type and reset value
+    subtype  DAT_TYP is std_logic_vector(WIDTH-1 downto 0);
+    -- the default synthesizes into a datapath without reset
+    constant DAT_RST : DAT_TYP := (others => 'X');
+    constant DAT_C00 : DAT_TYP := 8X"00";
+    constant DAT_C01 : DAT_TYP := 8X"01";
 
     -- RX interface
     signal rx_vld : std_logic := '0';
-    signal rx_dat : DAT_T;
+    signal rx_dat : DAT_TYP;
     signal rx_rdy : std_logic;
 
     -- TX interface
     signal tx_vld : std_logic;
-    signal tx_dat : DAT_T;
+    signal tx_dat : DAT_TYP;
     signal tx_rdy : std_logic := '0';
 
 begin
@@ -56,6 +61,16 @@ begin
         end loop;
     end process clock;
 
+    -- clock cycle counter
+    counter: process(clk)
+    begin
+        if (rst = '1') then
+            cnt <= 1;
+        elsif rising_edge(clk) then
+            cnt <= cnt + 1;
+        end if;
+    end process counter;
+    
     -- test sequence
     test : process
     begin
@@ -63,7 +78,7 @@ begin
         wait for 0 ns;
         -- TX/RX init
         rx_vld <= '0';
-        rx_dat <= (others => 'X');
+        rx_dat <= DAT_RST;
         tx_rdy <= '1';
         -- T0 (reset)
         rst <= '1';
@@ -71,26 +86,29 @@ begin
         -- T1
         rst <= '0';
         wait until rising_edge(clk);
+        assert (tx_dat = DAT_RST) report "Step 3: TX data mismatch" severity ERROR;
         -- T2
         rx_vld <= '1';
-        rx_dat <= 8X"00";
+        rx_dat <= DAT_C00;
         wait until rising_edge(clk);
         -- T3
         rx_vld <= '1';
-        rx_dat <= 8X"01";
+        rx_dat <= DAT_C01;
         wait until rising_edge(clk);
-        assert (tx_dat = 8X"00") report "Step 3: TX data mismatch" severity ERROR;
+        assert (tx_dat = DAT_C00) report "Step 3: TX data mismatch" severity ERROR;
         -- T4
         rx_vld <= '0';
-        rx_dat <= (others => 'X');
+        rx_dat <= DAT_RST;
         tx_rdy <= '0';
         wait until rising_edge(clk);
         -- T5
         tx_rdy <= '1';
         wait until rising_edge(clk);
-        assert (tx_dat = 8X"01") report "Step 5: TX data mismatch" severity ERROR;
+        assert (tx_dat = DAT_C01) report "Step 5: TX data mismatch" severity ERROR;
         -- T6
-        tx_rdy <= '1';
+        tx_rdy <= '0';
+        wait until rising_edge(clk);
+        -- T...
         wait until rising_edge(clk);
 
         -- end simulation
@@ -104,7 +122,8 @@ begin
 
     dut : entity work.register_slice_datapath
     generic map (
-        DAT_T => DAT_T
+        DAT_TYP => DAT_TYP,
+        DAT_RST => DAT_RST
     )
     port map (
         -- system signals

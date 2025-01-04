@@ -11,8 +11,10 @@ use ieee.std_logic_1164.all;
 
 entity register_slice_datapath is
     generic (
-        -- data type
-        type DAT_T
+        -- data type and reset value
+        type DAT_TYP;
+        DAT_RST : DAT_TYP
+        -- 'X' synthesizes into a datapath without reset
     );
     port (
         -- system signals
@@ -20,12 +22,12 @@ entity register_slice_datapath is
         rst    : in  std_logic;  -- reset
         -- RX interface
         rx_vld : in  std_logic;  -- valid
-        rx_dat : in  DAT_T;      -- data
+        rx_dat : in  DAT_TYP;    -- data
         rx_rdy : out std_logic;  -- ready
         -- TX interface
-        tx_vld : out std_logic;-- valid
-        tx_dat : out DAT_T;    -- data
-        tx_rdy : in  std_logic -- ready
+        tx_vld : out std_logic;  -- valid
+        tx_dat : out DAT_TYP;    -- data
+        tx_rdy : in  std_logic   -- ready
     );
 end register_slice_datapath;
 
@@ -46,11 +48,9 @@ begin
     begin
         if (rst = '1') then
             tx_vld <= '0';
-        if rising_edge(clk) then
-            else
-                if (rx_rdy = '1') then
-                    tx_vld <= rx_vld;
-                end if;
+        elsif rising_edge(clk) then
+            if (rx_rdy = '1') then
+                tx_vld <= rx_vld;
             end if;
         end if;
     end process handshake;
@@ -58,7 +58,9 @@ begin
     -- data path register (without reset)
     data: process(clk)
     begin
-        if rising_edge(clk) then
+        if (rst = '1') then
+            tx_dat <= DAT_RST;
+        elsif rising_edge(clk) then
             if (rx_trn = '1') then
                 tx_dat <= rx_dat;
             end if;

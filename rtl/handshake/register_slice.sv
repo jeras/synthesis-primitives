@@ -10,26 +10,27 @@ module register_slice #(
     // configuration
     parameter bit ENABLE_BACKPRESSURE = 1'b1,  // enable backpressure register
     parameter bit ENABLE_DATAPATH     = 1'b1,  // enable data path register
-    // data type
-    parameter type DAT_T = logic [8-1:0]
+    // data type and reset value
+    parameter type    DAT_TYP = logic [8-1:0],
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
 )(
     // system signals
-    input  logic clk,  // clock
-    input  logic rst,  // reset
+    input  logic   clk,  // clock
+    input  logic   rst,  // reset
     // RX interface
-    input  logic rx_vld,  // valid
-    input  DAT_T rx_dat,  // data
-    output logic rx_rdy,  // ready
+    input  logic   rx_vld,  // valid
+    input  DAT_TYP rx_dat,  // data
+    output logic   rx_rdy,  // ready
     // TX interface
-    output logic tx_vld,  // valid
-    output DAT_T tx_dat,  // data
-    input  logic tx_rdy   // ready
+    output logic   tx_vld,  // valid
+    output DAT_TYP tx_dat,  // data
+    input  logic   tx_rdy   // ready
 );
 
     // middle stream signals
-    logic md_vld;  // valid
-    DAT_T md_dat;  // data
-    logic md_rdy;  // ready
+    logic   md_vld;  // valid
+    DAT_TYP md_dat;  // data
+    logic   md_rdy;  // ready
 
 ///////////////////////////////////////////////////////////////////////////////
 // backward path (backpressure) register
@@ -40,7 +41,8 @@ if (ENABLE_BACKPRESSURE)
 begin: backpressure
 
     register_slice_backpressure #(
-        .DAT_T (DAT_T)
+        .DAT_TYP (DAT_TYP),
+        .DAT_RST (DAT_RST)
     ) backpressure (
         // system signals
         .clk    (clk),
@@ -75,7 +77,8 @@ if (ENABLE_DATAPATH)
 begin: datapath
 
     register_slice_datapath #(
-        .DAT_T (DAT_T)
+        .DAT_TYP (DAT_TYP),
+        .DAT_RST (DAT_RST)
     ) datapath (
         // system signals
         .clk    (clk),

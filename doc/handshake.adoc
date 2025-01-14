@@ -561,7 +561,7 @@ image::handshake/register_slice_datapath_lowpower_timing_diagram.svg[Datapath re
 
 There is no undesired datapath register `tx_dat` toggling.
 
-=== Backpressure register slice SystemVerilog implementation
+=== Backpressure register slice
 
 The backpressure register slice is sometimes needed on a long stream processing pipeline.
 Its purpose is to cut combinational READY signal paths into sections

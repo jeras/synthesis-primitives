@@ -57,8 +57,8 @@ begin
         end if;
     end process handshake;
 
-    -- data path register (without reset)
-    data: process(clk)
+    -- data path register (optional asynchronous reset)
+    data: process(clk, rst)
     begin
         if (rst = '1') then
             ls_dat <= DAT_RST;

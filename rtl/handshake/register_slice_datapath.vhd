@@ -44,7 +44,7 @@ begin
     tx_trn <= tx_vld and tx_rdy;
 
     -- handshake (asynchronous reset)
-    handshake: process(clk)
+    handshake: process(clk, rst)
     begin
         if (rst = '1') then
             tx_vld <= '0';
@@ -55,8 +55,8 @@ begin
         end if;
     end process handshake;
 
-    -- data path register (without reset)
-    data: process(clk)
+    -- data path register (optional asynchronous reset)
+    data: process(clk, rst)
     begin
         if (rst = '1') then
             tx_dat <= DAT_RST;

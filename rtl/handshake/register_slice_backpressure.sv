@@ -46,7 +46,7 @@ module register_slice_backpressure #(
         end
     end
 
-    // data path register (without reset)
+    // data path register (optional asynchronous reset)
     always_ff @(posedge clk, posedge rst)
     if (rst) begin
         ls_dat <= DAT_RST;

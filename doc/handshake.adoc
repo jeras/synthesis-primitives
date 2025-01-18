@@ -326,6 +326,8 @@ with the same details seen from different points of view.
 
 The implementation logic is derived from state transition tables.
 
+=== Common implementation details
+
 The following implementation technology specific (ASIC/FPGA)
 choices have been made:
 
@@ -336,21 +338,29 @@ choices have been made:
 ** asynchronous (common in ASIC designs) or
 ** synchronous (preferred by some FPGA vendors).
 
+==== Flip-flops with clock enable
+
 D-type flip-flops with clock enable and optional set/reset are used
 in schemes, since they are a good fit for the problem,
 and they make the schematic diagrams simple.
 
+.Flip-flop with clock enable input
 image::handshake/flip-flop-enable.svg[D-type Flip-Flop with clock enable]
 
 Some FPGA architectures or ASIC standard cell libraries
 might not provide registers with clock enable,
 in this case a flip-flop with a feedback loop is used instead.
 
+.Flip-flop with feedback loop implementing write enable
 image::handshake/flip-flop-feedback.svg[D-type Flip-Flop with feedback]
 
-TODO: discuss complexity versus power optimizations.
+==== Complexity versus power optimizations
 
-TODO: modify testbench to check for RESET datapath value.
+TODO
+
+==== Optional datapath reset
+
+TODO
 
 === Datapath register slice
 

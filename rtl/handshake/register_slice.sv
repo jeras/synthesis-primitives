@@ -11,8 +11,11 @@ module register_slice #(
     parameter bit ENABLE_BACKPRESSURE = 1'b1,  // enable backpressure register
     parameter bit ENABLE_DATAPATH     = 1'b1,  // enable data path register
     // data type and reset value
+    // default 'x synthesizes into a datapath without reset
     parameter type    DAT_TYP = logic [8-1:0],
-    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x),
+    // low power mode reduces propagation of non valid data from RX to TX
+    parameter bit     LOW_PWR = 1'b1
 )(
     // system signals
     input  logic   clk,  // clock
@@ -42,7 +45,8 @@ begin: backpressure
 
     register_slice_backpressure #(
         .DAT_TYP (DAT_TYP),
-        .DAT_RST (DAT_RST)
+        .DAT_RST (DAT_RST),
+        .LOW_PWR (LOW_PWR)
     ) backpressure (
         // system signals
         .clk    (clk),
@@ -78,7 +82,8 @@ begin: datapath
 
     register_slice_datapath #(
         .DAT_TYP (DAT_TYP),
-        .DAT_RST (DAT_RST)
+        .DAT_RST (DAT_RST),
+        .LOW_PWR (LOW_PWR)
     ) datapath (
         // system signals
         .clk    (clk),

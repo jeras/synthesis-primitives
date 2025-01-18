@@ -15,7 +15,10 @@ use ieee.numeric_std.all;
 
 entity register_slice_datapath_tb is
     generic (
-        WIDTH : positive := 8
+        -- datapath width
+        WIDTH : positive := 8;
+        -- low power mode reduces propagation of non valid data from RX to TX
+        LOW_PWR : boolean := TRUE
     );
 end register_slice_datapath_tb;
 
@@ -30,8 +33,8 @@ architecture testbench of register_slice_datapath_tb is
     signal cnt : integer := 0;  -- clock cycle counter
 
     -- data type and reset value
+    -- by default 'X' synthesizes into a datapath without reset
     subtype  DAT_TYP is std_logic_vector(WIDTH-1 downto 0);
-    -- the default synthesizes into a datapath without reset
     constant DAT_RST : DAT_TYP := (others => 'X');
     constant DAT_C00 : DAT_TYP := 8X"00";
     constant DAT_C01 : DAT_TYP := 8X"01";
@@ -123,7 +126,8 @@ begin
     dut : entity work.register_slice_datapath
     generic map (
         DAT_TYP => DAT_TYP,
-        DAT_RST => DAT_RST
+        DAT_RST => DAT_RST,
+        LOW_PWR => LOW_PWR
     )
     port map (
         -- system signals

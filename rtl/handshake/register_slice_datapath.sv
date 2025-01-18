@@ -8,9 +8,11 @@
 
 module register_slice_datapath #(
     // data type and reset value
+    // by default 'x synthesizes into a datapath without reset
     parameter type    DAT_TYP = logic [8-1:0],
-    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
-    // the default synthesizes into a datapath without reset
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x),
+    // low power mode reduces propagation of non valid data from RX to TX
+    parameter bit     LOW_PWR = 1'b1
 )(
     // system signals
     input  logic   clk,  // clock
@@ -51,7 +53,7 @@ module register_slice_datapath #(
     if (rst) begin
         tx_dat <= DAT_RST;
     end else begin
-        if (rx_trn) begin
+        if (LOW_PWR ? rx_trn : rx_rdy) begin
            tx_dat <= rx_dat;
         end
     end

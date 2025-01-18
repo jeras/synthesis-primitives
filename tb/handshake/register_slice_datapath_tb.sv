@@ -9,8 +9,11 @@
 
 module register_slice_datapath_tb #(
     // data type and reset value
+    // by default 'x synthesizes into a datapath without reset
     parameter type    DAT_TYP = logic [8-1:0],
-    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x),
+    // low power mode reduces propagation of non valid data from RX to TX
+    parameter bit     LOW_PWR = 1'b1
 );
 
     // clock period
@@ -84,7 +87,8 @@ module register_slice_datapath_tb #(
 
     register_slice_datapath #(
         .DAT_TYP (DAT_TYP),
-        .DAT_RST (DAT_RST)
+        .DAT_RST (DAT_RST),
+        .LOW_PWR (LOW_PWR)
     ) dut (
         // system signals
         .clk    (clk),
@@ -103,10 +107,12 @@ module register_slice_datapath_tb #(
 // waveforms
 ///////////////////////////////////////////////////////////////////////////////
 
+localparam string PARAMETERS = {"LOW_PWR", "_", LOW_PWR ? "1" : "0"};
+
 `ifdef VERILATOR
     initial
     begin
-        $dumpfile("register_slice_datapath_tb.fst");
+        $dumpfile({"register_slice_datapath_tb", "_", PARAMETERS, ".fst"});
         $dumpvars(0, register_slice_datapath_tb);
     end
 `endif

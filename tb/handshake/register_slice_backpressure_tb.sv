@@ -9,8 +9,11 @@
 
 module register_slice_backpressure_tb #(
     // data type and reset value
+    // by default 'x synthesizes into a datapath without reset
     parameter type    DAT_TYP = logic [8-1:0],
-    parameter DAT_TYP DAT_RST = DAT_TYP'('x)
+    parameter DAT_TYP DAT_RST = DAT_TYP'('x),
+    // low power mode reduces propagation of non valid data from RX to TX
+    parameter bit     LOW_PWR = 1'b1
 );
 
     // clock period
@@ -74,6 +77,8 @@ module register_slice_backpressure_tb #(
         rx_dat <= 'x;
         tx_rdy <= 1'b0;
         @(posedge clk);
+        // T...
+        @(posedge clk);
 
         // end simulation
         $display("SUCCESS running %m");
@@ -87,7 +92,8 @@ module register_slice_backpressure_tb #(
 
     register_slice_backpressure #(
         .DAT_TYP (DAT_TYP),
-        .DAT_RST (DAT_RST)
+        .DAT_RST (DAT_RST),
+        .LOW_PWR (LOW_PWR)
     ) dut (
         // system signals
         .clk    (clk),

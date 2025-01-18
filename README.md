@@ -24,6 +24,7 @@ The document is divided into the following sections:
 - [interconnect](doc/interconnect.md)
   - fixed priority and round-robin arbiters,
   - mask/range address decoder,
+- [VALID/READY handshake](doc/handshake.adoc)
 - [pipelining](doc/pipeline.md)
   - synchronous/asynchronous FIFO,
   - pipeline stages,

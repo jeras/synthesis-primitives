@@ -354,13 +354,31 @@ in this case a flip-flop with a feedback loop is used instead.
 .Flip-flop with feedback loop implementing write enable
 image::handshake/flip-flop-feedback.svg[D-type Flip-Flop with feedback]
 
+
+https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/edfxtp/README.html
+
+
+https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/dlclkp/README.html
+
+==== Clock gating
+
+https://github.com/AUCOHL/Lighter
+https://github.com/buttercutter/LACG?tab=readme-ov-file
+https://www.proquest.com/openview/f0ad5107661bc9d124f3cb6a043b4673/1?pq-origsite=gscholar&cbl=18750&diss=y
+
+==== Optional datapath reset
+
+TODO:
+
+https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfxtp/README.html
+https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfrtp/README.html
+
+
 ==== Complexity versus power optimizations
 
 TODO
 
-==== Optional datapath reset
-
-TODO
+https://github.com/pulp-platform/common_cells/blob/master/src/stream_register.sv
 
 === Datapath register slice
 

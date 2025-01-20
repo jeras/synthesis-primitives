@@ -348,7 +348,7 @@ and they make the schematic diagrams simple.
 image::handshake/flip-flop-enable.svg[D-type Flip-Flop with clock enable]
 
 Some FPGA architectures or ASIC standard cell libraries
-might not provide registers with clock enable (data enable, write enable, ...),
+might not provide registers with clock enable (data/write/load/... enable),
 in this case a flip-flop with an external loopback and multiplexer is used
 instead instead of them being part of the flip-flop cell itself.
 
@@ -363,11 +363,11 @@ image::handshake/flip-flop-loopback.svg[D-type Flip-Flop with loopback]
 | description
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfxtp/README.html[sky130_fd_sc_hd/dfxtp]
-| 
+|
 |
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/mux2/README.html[sky130_fd_sc_hd/mux2]
-| 
+|
 |
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/edfxtp/README.html[sky130_fd_sc_hd/edfxtp]
@@ -379,7 +379,7 @@ image::handshake/flip-flop-loopback.svg[D-type Flip-Flop with loopback]
 |
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/mux2/README.html[sky130_fd_sc_hs/mux2]
-| 
+|
 |
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/edfxtp/README.html[sky130_fd_sc_hs/edfxtp]
@@ -391,7 +391,7 @@ image::handshake/flip-flop-loopback.svg[D-type Flip-Flop with loopback]
 |
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_ls/cells/mux2/README.html[sky130_fd_sc_ls/mux2]
-| 
+|
 |
 
 | https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_ls/cells/edfxtp/README.html[sky130_fd_sc_ls/edfxtp]
@@ -406,6 +406,14 @@ image::handshake/flip-flop-loopback.svg[D-type Flip-Flop with loopback]
 | 28.537600 µm²
 |
 
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu9t5v0/cells/dffq/gf180mcu_fd_sc_mcu9t5v0__dffq_1.html[gf180mcu_fd_sc_mcu9t5v0/dffq_1]
+| 79.027200 µm²
+|
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu9t5v0/cells/mux2/gf180mcu_fd_sc_mcu9t5v0__mux2_1.html[gf180mcu_fd_sc_mcu9t5v0/mux2_1]
+| 36.691200 µm²
+|
+
 | file:///home/izi/Downloads/sg13g2_stdcell_typ_1p20V_25C.pdf[sg13g2/dfrbp_1]
 | 47.17440 µm²
 | active low reset
@@ -417,11 +425,9 @@ image::handshake/flip-flop-loopback.svg[D-type Flip-Flop with loopback]
 
 ==== Clock gating
 
-https://github.com/AUCOHL/Lighter
-https://github.com/buttercutter/LACG?tab=readme-ov-file
-https://www.proquest.com/openview/f0ad5107661bc9d124f3cb6a043b4673/1?pq-origsite=gscholar&cbl=18750&diss=y
-
-https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/dlclkp/README.html
+Clock gating is an area and power efficient alternative to a loopback.
+The open source tool Lighter<<lighter>> provides
+a good explanation and examples.
 
 ==== Optional datapath reset
 
@@ -970,3 +976,15 @@ Public forum discussions:
 
 * [[[skid-buffer-implementation, S6]]]
   https://www.reddit.com/r/FPGA/comments/107j9t9/simple_skid_buffer_implementation/
+
+Clock gating:
+
+* [[[lighter, G1]]] AUCOHL. https://github.com/AUCOHL/Lighter[Lighter]
+
+* [[[lacg, G2]]] https://github.com/buttercutter/LACG?tab=readme-ov-file
+
+* [[[osu, G3]]] Lusk, Hunter Brady. Power Optimization Through Clock Gating Standard Cells Designed for OSU VLSIARCH SKY130 Process
+https://www.proquest.com/openview/f0ad5107661bc9d124f3cb6a043b4673/1?pq-origsite=gscholar&cbl=18750&diss=y
+
+
+

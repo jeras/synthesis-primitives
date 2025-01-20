@@ -594,7 +594,7 @@ The logic can be simplified into the equation used in the source code.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=36..37]
+include::../rtl/handshake/register_slice_datapath.sv[lines=38..39]
 ----
 
 TIP: RX is *ready* when TX is *ready* or the TX datapath register is empty.
@@ -615,7 +615,7 @@ the clock enable for the `tx_vld` register.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=39..47]
+include::../rtl/handshake/register_slice_datapath.sv[lines=41..49]
 ----
 
 TIP: TX is not *valid* after reset,
@@ -676,12 +676,12 @@ this is equivalent to the RX transfer condition.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=32..33]
+include::../rtl/handshake/register_slice_datapath.sv[lines=34..35]
 ----
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=49..57]
+include::../rtl/handshake/register_slice_datapath.sv[lines=51..59]
 ----
 
 TIP: Copy the datapath value from RX to TX only on RX *transfer*.
@@ -812,7 +812,7 @@ equivalent equation with a ternary operator.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=59..60]
+include::../rtl/handshake/register_slice_backpressure.sv[lines=61..62]
 ----
 
 TIP: When RX is *ready* then VALID is passed through,
@@ -834,7 +834,7 @@ the clock enable for the `rx_rdy` register.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=39..47]
+include::../rtl/handshake/register_slice_backpressure.sv[lines=41..49]
 ----
 
 TIP: RX is *READY* after reset,
@@ -853,7 +853,7 @@ matches the above conditions from the state transition table.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=61]
+include::../rtl/handshake/register_slice_backpressure.sv[lines=63]
 ----
 
 TIP: When RX is *ready*, TX datapath comes from RX,
@@ -924,12 +924,12 @@ ls_ena = rx_trn & ~tx_rdy;
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=35..36]
+include::../rtl/handshake/register_slice_backpressure.sv[lines=37..38]
 ----
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=49..57]
+include::../rtl/handshake/register_slice_backpressure.sv[lines=51..59]
 ----
 
 TIP: Copy the datapath value from RX to TX only on RX *transfer* while TX is *not ready*.

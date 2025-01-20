@@ -220,7 +220,7 @@ cd sim/ghdl
 
 IMPORTANT: Although scripts for running simulations using Verilator are provided,
 the simulator currently lacks proper support for non blocking assignment inside `initial` blocks,
-thus it does not run the simulation correctly. 
+thus it does not run the simulation correctly.
 
 == Stream Interface
 
@@ -348,17 +348,72 @@ and they make the schematic diagrams simple.
 image::handshake/flip-flop-enable.svg[D-type Flip-Flop with clock enable]
 
 Some FPGA architectures or ASIC standard cell libraries
-might not provide registers with clock enable,
-in this case a flip-flop with a feedback loop is used instead.
+might not provide registers with clock enable (data enable, write enable, ...),
+in this case a flip-flop with an external loopback and multiplexer is used
+instead instead of them being part of the flip-flop cell itself.
 
-.Flip-flop with feedback loop implementing write enable
-image::handshake/flip-flop-feedback.svg[D-type Flip-Flop with feedback]
+.Flip-flop with loopback implementing write enable
+image::handshake/flip-flop-loopback.svg[D-type Flip-Flop with loopback]
 
+.Comparison of D-type flip-flop standard cells with and without clock enable
+[stripes=hover, cols="3,1,3"]
+|===
+| PDK/library/cell
+| area
+| description
 
-https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/edfxtp/README.html
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfxtp/README.html[sky130_fd_sc_hd/dfxtp]
+| 
+|
 
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/mux2/README.html[sky130_fd_sc_hd/mux2]
+| 
+|
 
-https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/dlclkp/README.html
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/edfxtp/README.html[sky130_fd_sc_hd/edfxtp]
+|
+| loopback enable
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/dfxtp/README.html[sky130_fd_sc_hs/dfxtp]
+|
+|
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/mux2/README.html[sky130_fd_sc_hs/mux2]
+| 
+|
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/edfxtp/README.html[sky130_fd_sc_hs/edfxtp]
+|
+| loopback enable
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_ls/cells/dfxtp/README.html[sky130_fd_sc_ls/dfxtp]
+|
+|
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_ls/cells/mux2/README.html[sky130_fd_sc_ls/mux2]
+| 
+|
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_ls/cells/edfxtp/README.html[sky130_fd_sc_ls/edfxtp]
+|
+| loopback enable
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu7t5v0/cells/dffq/gf180mcu_fd_sc_mcu7t5v0__dffq_1.html[gf180mcu_fd_sc_mcu7t5v0/dffq_1]
+| 63.660800 µm²
+|
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu7t5v0/cells/mux2/gf180mcu_fd_sc_mcu7t5v0__mux2_1.html[gf180mcu_fd_sc_mcu7t5v0/mux2_1]
+| 28.537600 µm²
+|
+
+| file:///home/izi/Downloads/sg13g2_stdcell_typ_1p20V_25C.pdf[sg13g2/dfrbp_1]
+| 47.17440 µm²
+| active low reset
+
+| file:///home/izi/Downloads/sg13g2_stdcell_typ_1p20V_25C.pdf[sg13g2/mux2_1]
+| 18.14400 µm²
+|
+|===
 
 ==== Clock gating
 
@@ -366,13 +421,59 @@ https://github.com/AUCOHL/Lighter
 https://github.com/buttercutter/LACG?tab=readme-ov-file
 https://www.proquest.com/openview/f0ad5107661bc9d124f3cb6a043b4673/1?pq-origsite=gscholar&cbl=18750&diss=y
 
+https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hs/cells/dlclkp/README.html
+
 ==== Optional datapath reset
 
-TODO:
+Reset for the detapath is described as optional,
+since it is not strictly necessary for implementing desired functionality.
+This is a somehow controversial topic, so I will not provide a final judgement.
+In the end it usually comes to personal preferences of individual developers.
 
-https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfxtp/README.html
-https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfrtp/README.html
+The main argument for datapath reset is usually to create a repeatable reset sequence,
+in terms of system state and power consumption.
+In general, the unpredictability is not expected to be large enough
+to significantly affect measurements.
 
+The main argument for omitting reset, would be to slightly reduce area and power.
+The following table provides a comparison between asynchronous reset and no reset
+for a few open source PDK standard cell libraries.
+
+.Comparison of D-type flip-flop standard cells with and without reset
+[stripes=hover, cols="3,1,3"]
+|===
+| PDK/library/cell
+| area
+| description
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfrtp/README.html[sky130_fd_sc_hd/dfrtp]
+|
+| inverted reset
+
+| https://skywater-pdk.readthedocs.io/en/main/contents/libraries/sky130_fd_sc_hd/cells/dfxtp/README.html[sky130_fd_sc_hd/dfxtp]
+|
+|
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu7t5v0/cells/dffrnq/gf180mcu_fd_sc_mcu7t5v0__dffrnq_1.html[gf180mcu_fd_sc_mcu7t5v0/dffrnq_1]
+| 74.636800 µm²
+| active low reset
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu7t5v0/cells/dffq/gf180mcu_fd_sc_mcu7t5v0__dffq_1.html[gf180mcu_fd_sc_mcu7t5v0/dffq_1]
+| 63.660800 µm²
+|
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu9t5v0/cells/dffrnq/gf180mcu_fd_sc_mcu9t5v0__dffrnq_1.html[gf180mcu_fd_sc_mcu9t5v0/dffrnq_1]
+| 90.316800 µm²
+| active low reset
+
+| https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu9t5v0/cells/dffq/gf180mcu_fd_sc_mcu9t5v0__dffq_1.html[gf180mcu_fd_sc_mcu9t5v0/dffq_1]
+| 79.027200 µm²
+|
+
+| file:///home/izi/Downloads/sg13g2_stdcell_typ_1p20V_25C.pdf[sg13g2_dfrbp_1]
+| 47.17440 µm²
+| active low reset
+|===
 
 ==== Complexity versus power optimizations
 
@@ -430,7 +531,7 @@ while *RX READY depends on TX ready* (`+rx_rdy = tx_ready+`).
   *TX transfer* (`+tx_vld & tx_rdy == '1+`) and
   the datapath is *copied* from RX to TX (`+tx_dat <= rx_dat+`)
   thus stay in the VALID state.
- 
+
 . While in the VALID state with *negated TX READY* (`+tx_rdy == '0+`) there is no TX transfer,
   and since TX READY it is combinationaly propagated to RX there is also no RX transfer.
   TX VALID and datapath must remain *stable*, remain in the VALID state.
@@ -665,10 +766,10 @@ h| `rx_rdy`
 h| `ls_dat`
 
 | `0` | `x` | `1` | `0`      | don't care | `1`      keep | don't care    | 1, 6
-| `1` | `0` | `1` | `1`      | `rx_dat`   | `0` copy      | copy `rx_dat` | 2   
-| `x` | `0` | `0` | `1`      | `ls_dat`   | `0` copy/keep | keep `ls_dat` | 3   
-| `x` | `1` | `0` | `1`      | `ls_dat`   | `1` copy      | don't care    | 4   
-| `x` | `1` | `1` | `rx_vld` | `rx_dat`   | `1` copy/keep | don't care    | 5   
+| `1` | `0` | `1` | `1`      | `rx_dat`   | `0` copy      | copy `rx_dat` | 2
+| `x` | `0` | `0` | `1`      | `ls_dat`   | `0` copy/keep | keep `ls_dat` | 3
+| `x` | `1` | `0` | `1`      | `ls_dat`   | `1` copy      | don't care    | 4
+| `x` | `1` | `1` | `rx_vld` | `rx_dat`   | `1` copy/keep | don't care    | 5
 |===
 
 ==== Backpressure register slice SystemVerilog implementation
@@ -798,7 +899,7 @@ The following transition list describes how they affect power:
 
 ===== Low power implementation
 
-Clock enable can be only asserted when a transition (2) 
+Clock enable can be only asserted when a transition (2)
 explicitly requires a copy form RX to TX.
 Invalid values on the RX datapath will never be copied into local storage.
 Local storage will also stay unchanged,

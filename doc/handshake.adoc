@@ -262,8 +262,6 @@ The datapath port `dat` is fully customized using a type parameter/generic.
 | `LOW_PWR` | `bit` (`1'b1`)               | `boolean` (`TRUE`)                        | Enable low-power implementation.
 |===
 
-TODO: add reset and power parameters.
-
 System signals can be global (most common) or specific to the given interface.
 
 .system signals

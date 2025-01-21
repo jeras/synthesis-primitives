@@ -483,9 +483,45 @@ for a few open source PDK standard cell libraries.
 
 ==== Complexity versus power optimizations
 
-TODO
+This document provides implementations with two distinct optimizations:
 
-https://github.com/pulp-platform/common_cells/blob/master/src/stream_register.sv
+* low-complexity: focusing on simple control logic,
+* low-power: focusing on minimizing signal toggling.
+
+The low-power approach adds a single logic gate compared in the control path
+and does not affect the datapath complexity.
+On the other hand it can provide power savings in multiple non trivial designs.
+Therefore it is the preferred default implementation.
+
+I will try to explain how this implementations would behave
+for some common applications.
+
+Simple DSP pipeline:::
+In such a pipeline each stage takes a single clock period to process the data.
+VALID and READY signals are asserted most of the time,
+so the datapath makes one step forward in the pipeline on each clock cycle.
+In this situation the low-power implementation would not reduce any toggling.
+The control logic for such a pipeline is rather trivial
+and therefore not containing critical paths (those are in the datapath).
+So using the low-complexity implementation would not shorter any critical paths.
+As a summary, there is no advantage to either implementation.
+
+AXI crossbar:::
+For this example using a simple architecture with a single manager and multiple subordinates,
+where each subordinate interface has datapath register slices in the M->S direction.
+While the manager is performing transactions, datapath signals in WA, W, RA channels would be toggling.
+The low-power implementation prevents this toggling from being propagated
+to all but the selected subordinate.
+The low-complexity implementation would allow toggling intended for a single subordinate
+to propagate to all subordinate interfaces thus increasing power consumption.
+On the other hand, such a crossbar contains an arbiter in the control logic path,
+so choosing the low-complexity implementation might improve timing
+(depending on whether this is the critical path for the entire clock domain).
+
+WARNING: Some implementations misuse a different low power technique,
+by loading the datapath register with zeros when it contains no valid data.
+This has the opposite effect by adding unnecessary toggling to the registers.
+Additionally it requires a masking gate for each datapath bit thus increasing area.
 
 === Datapath register slice
 
@@ -976,6 +1012,11 @@ Public forum discussions:
 
 * [[[skid-buffer-implementation, S6]]]
   https://www.reddit.com/r/FPGA/comments/107j9t9/simple_skid_buffer_implementation/
+
+Open source RTL implementations:
+
+* [[[pulp-platform-axi, R1]]] Pulp-Platform
+https://github.com/pulp-platform/common_cells/blob/master/src/stream_register.sv
 
 Clock gating:
 

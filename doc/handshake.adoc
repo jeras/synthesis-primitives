@@ -253,12 +253,16 @@ image::handshake/stream_processing_module.svg[Stream processing module]
 The datapath port `dat` is fully customized using a type parameter/generic.
 
 .parameters/generics
-[cols="1,5,5,2"]
+[cols="1,4,5,3"]
 |===
-| Generic | SystemVerilog type (default) | VHDL type (default)                       | Description
+| Generic   | SystemVerilog type (default) | VHDL type (default)                       | Description
 
-| `DAT_G` | `type` (`logic [8-1:0]`)     | `type` (`std_logic_vector(8-1 downto 0)`) | Data Type.
+| `DAT_TYP` | `type` (`logic [8-1:0]`)     | `type` (`std_logic_vector(8-1 downto 0)`) | Data Type.
+| `DAT_RST` | `DAT_TYP` (`'x`)             | `DAT_TYP` (`+(others => '0)+`)            | Data reset value.
+| `LOW_PWR` | `bit` (`1'b1`)               | `boolean` (`TRUE`)                        | Enable low-power implementation.
 |===
+
+TODO: add reset and power parameters.
 
 System signals can be global (most common) or specific to the given interface.
 
@@ -279,7 +283,7 @@ The protocol handshake and a generic data bus.
 | Signal | SystemVerilog type | VHDL type   | Direction | Description
 
 | `vld`  | `logic`            | `std_logic` | TX -> RX  | Handshake data valid.
-| `dat`  | `DAT_G`            | `DAT_G`     | TX -> RX  | Data payload.
+| `dat`  | `DAT_TYP`          | `DAT_TYP`   | TX -> RX  | Data payload.
 | `rdy`  | `logic`            | `std_logic` | RX -> TX  | Handshake back-pressure ready.
 |===
 

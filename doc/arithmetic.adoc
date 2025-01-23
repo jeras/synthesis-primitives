@@ -1,0 +1,178 @@
+= Arithmetic primitives
+
+== Introduction
+
+=== Overview
+
+=== Nomenclature
+
+=== Arithmetic standard cells
+
+Half and full adder are single bit primitives used to primarily construct ripple-carry adders (RCA).
+
+==== Half adder
+
+A _half adder_ takes one data bit `A` from one operand and a cary bit `Ci` as inputs and
+outputs a sum `S` and a cary output `Co`.
+
+.Half adder logic table
+[width=40%, stripes=hover, cols="1,1,1,1"]
+|===
+| `A` | `Ci` | `S` | `Co`
+
+| `0` | `0`  | `0` | `0`
+| `0` | `1`  | `1` | `0`
+| `1` | `0`  | `1` | `0`
+| `1` | `1`  | `0` | `1`
+|===
+
+[source, verilog, linenums]
+----
+include::../rtl/arithmetic/HA.sv[]
+----
+
+==== Full adder
+
+A _full adder_ takes two data bits `A`, `B` from two operands and a cary bit `Ci` as inputs and
+outputs a sum `S` and a cary output `Co`.
+
+.Full adder logic table
+[width=50%, stripes=hover, cols="1,1,1,1,1"]
+|===
+| `A` | `B` | `Ci` | `S` | `Co`
+
+| `0` | `0` | `0`  | `0` | `0`
+| `0` | `0` | `1`  | `1` | `0`
+| `0` | `1` | `0`  | `1` | `0`
+| `0` | `1` | `1`  | `0` | `1`
+| `1` | `0` | `0`  | `1` | `0`
+| `1` | `0` | `1`  | `0` | `1`
+| `1` | `1` | `0`  | `0` | `1`
+| `1` | `1` | `1`  | `1` | `1`
+|===
+
+[source, verilog, linenums]
+----
+include::../rtl/arithmetic/FA.sv[]
+----
+
+==== Constant input signals
+
+If one of the input operand is a constant (`B` for example),
+a full adder can be replaced with a half adder.
+
+.Full adder logic table when `B=0`
+[width=50%, stripes=hover, cols="1,1,1,1,1"]
+|===
+| `A` | `B` | `Ci` | `S` | `Co`
+
+| `0` | `0` | `0`  | `0` | `0`
+| `0` | `0` | `1`  | `1` | `0`
+| `1` | `0` | `0`  | `1` | `0`
+| `1` | `0` | `1`  | `0` | `1`
+|===
+
+[source, verilog]
+----
+S = A ^ B ^ Ci = A ^ 1'b0 ^ Ci = A ^ Ci
+Co = (A & B) | (Ci & (A ^ B)) = (A & 1'b0) | (Ci & (A ^ 1'b0)) = Ci & A;
+----
+
+.Full adder logic table when `B=1`
+[width=50%, stripes=hover, cols="1,1,1,1,1"]
+|===
+| `A` | `B` | `Ci` | `S` | `Co`
+
+| `0` | `1` | `0`  | `1` | `0`
+| `0` | `1` | `1`  | `0` | `1`
+| `1` | `1` | `0`  | `0` | `1`
+| `1` | `1` | `1`  | `1` | `1`
+|===
+
+[source, verilog]
+----
+S = A ^ B ^ Ci = A ^ 1'b1 ^ Ci = ~(A ^ Ci)
+Co = (A & B) | (Ci & (A ^ B)) = (A & 1'b1) | (Ci & (A ^ 1'b1)) = A | (Ci & ~A) = (A | Ci) & (A | ~A) = A | Ci
+
+Co = (Ci & A) | S;
+----
+
+
+== Components
+
+=== Ripple-carry adder (RCA)
+
+A `ripple-carry adder` is a chain of _full adder_ cells.
+
+[source, verilog, linenums]
+----
+include::../rtl/arithmetic/FA.sv[]
+----
+
+In Verilog the same can be done with a vector instance.
+
+```SystemVerilog
+module RCA #(
+    int WIDTH = 32
+)(
+    input  logic [WIDTH-1:0] A,   // data operand A vector
+    input  logic [WIDTH-1:0] B,   // data operand B vector
+    input  logic             Ci,  // carry input
+    output logic             S,   // sum
+    output logic             Co   // carry output
+);
+    // local signals
+    logic [WIDTH-1:-1] Ct;  // carry chain
+    // vector instance
+    FA add [WIDTH-1:0] (
+        .A   (A),
+        .B   (B),
+        .Ci  (C[WIDTH-2:-1]),
+        .S   (S),
+        .Co  (C[WIDTH-1:0])
+    );
+    // output carry
+    assign Co = C[WIDTH-1];
+endmodule: RCA
+```
+
+A Ripple-carry adder with constant operand (for example incrementer/decrementer),
+can be constructed with half adders and negators instead of full adders.
+
+[source, verilog, linenums]
+----
+include::../techmap/rca_map.v[]
+----
+
+
+### Multiplier
+
+### Multiply accumulate
+
+### Divider
+
+[bibliography]
+== References
+
+Adder:
+
+* [[[wiki-adder, W1]]] https://en.wikipedia.org/wiki/Adder_(electronics)
+
+https://cseweb.ucsd.edu/classes/fa06/cse246/lingadder.pdf
+http://www.rjsweb.net/publications/asilomar_conference_38_paper_2004.pdf
+
+https://github.com/mattvenn/instrumented_adder/tree/177d358d927fc541a00551a8c82ca78676e935e4
+https://github.com/tdene/synth_opt_adders
+https://github.com/lnis-uofu/yosys_prefix_trees/tree/main
+
+Incrementer/Decrementer:
+
+Highly parallel increment/decrement using CMOS technology
+R. Hashemian
+https://ieeexplore.ieee.org/document/140858
+
+Magnitude comparator:
+
+https://www.researchgate.net/publication/335740403_128_bit_Parallel_Prefix_Tree_Structure_Comparator
+
+

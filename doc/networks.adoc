@@ -1,0 +1,29 @@
+= Networks
+
+== Sorting and routing networks
+
+This wikipedia article introduces [sorting networks](https://en.wikipedia.org/wiki/Sorting_network).
+There are several methods to construct such networks,
+
+- [bitonic sorter](https://en.wikipedia.org/wiki/Bitonic_sorter),
+- [pairwise sorting network](https://en.wikipedia.org/wiki/Pairwise_sorting_network),
+- [some know optimal networks](https://bertdobbelaere.github.io/sorting_networks.html),
+- ...
+
+Sorting networks and their applications
+by K. E. BATCHER
+https://www.cs.kent.edu/~batcher/sort.pdf
+
+Routing Partial Permutations in Interconnection Networks based on Radix Sorting
+Tripti Jain and Klaus Schneider
+https://es.cs.rptu.de/publications/datarsg/JaSc18c.pdf
+
+https://github.com/bertdobbelaere/SorterHunter
+
+#### Crossbar
+
+https://en.wikipedia.org/wiki/Butterfly_network
+https://en.wikipedia.org/wiki/Banyan_switch
+https://en.wikipedia.org/wiki/Nonblocking_minimal_spanning_switch
+
+

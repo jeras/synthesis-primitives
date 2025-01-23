@@ -965,23 +965,8 @@ Statistial Fairness of Ordered Arbiters
 A. Madalinski, A. Bystrov, A. Yakovlev
 https://www.researchgate.net/publication/2321410_Statistical_Fairness_of_Ordered_Arbiters
 
-### Arithmetic operations
 
-#### Adder
 
-https://en.wikipedia.org/wiki/Adder_(electronics)
-https://cseweb.ucsd.edu/classes/fa06/cse246/lingadder.pdf
-http://www.rjsweb.net/publications/asilomar_conference_38_paper_2004.pdf
-
-https://github.com/mattvenn/instrumented_adder/tree/177d358d927fc541a00551a8c82ca78676e935e4
-https://github.com/tdene/synth_opt_adders
-https://github.com/lnis-uofu/yosys_prefix_trees/tree/main
-
-#### Incrementer/Decrementer
-
-Highly parallel increment/decrement using CMOS technology
-R. Hashemian
-https://ieeexplore.ieee.org/document/140858
 
 ### FIR/IIR filters
 
@@ -1073,34 +1058,11 @@ https://vimeo.com/827700226
 - [Design and implementation of reconfigurable coders for communication systems](https://ieeexplore.ieee.org/document/7593063)
 - [Extended (24, 12) Binary Golay Code: Encoding and Decoding Procedures](https://www.maplesoft.com/applications/Preview.aspx?id=1757)
 
-### Networks
+### Yosys techmap
 
-### Sorting and switching networks
+https://tomverbeure.github.io/2022/11/18/Primitive-Transformations-with-Yosys-Techmap.html
+https://github.com/YosysHQ/yosys/blob/main/docs/source/yosys_internals/formats/cell_library.rst
 
-This wikipedia article introduces [sorting networks](https://en.wikipedia.org/wiki/Sorting_network).
-There are several methods to construct such networks,
+https://www.reddit.com/r/yosys/comments/586w5e/changing_cell_type/
 
-- [bitonic sorter](https://en.wikipedia.org/wiki/Bitonic_sorter),
-- [pairwise sorting network](https://en.wikipedia.org/wiki/Pairwise_sorting_network),
-- [some know optimal networks](https://bertdobbelaere.github.io/sorting_networks.html),
-- ...
 
-Sorting networks and their applications
-by K. E. BATCHER
-https://www.cs.kent.edu/~batcher/sort.pdf
-
-#### Crossbar
-
-https://en.wikipedia.org/wiki/Butterfly_network
-https://en.wikipedia.org/wiki/Banyan_switch
-https://en.wikipedia.org/wiki/Nonblocking_minimal_spanning_switch
-
-### Handshake protocols and pipelines
-
-MICROPIPELINES
-IVAN E. SUTHERLAND
-https://dl.acm.org/doi/pdf/10.1145/63526.63532
-
-The Theory of Latency Insensitive Design
-Luca P. Carloni
-https://ptolemy.berkeley.edu/projects/embedded/asves/dsm/lid/papers/lipTransactions.pdf

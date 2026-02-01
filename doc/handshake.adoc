@@ -632,7 +632,8 @@ The logic can be simplified into the equation used in the source code.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=38..39]
+    // combinational RX backpressure
+    assign rx_rdy = ~tx_vld | tx_rdy;
 ----
 
 TIP: RX is *ready* when TX is *ready* or the TX datapath register is empty.
@@ -653,7 +654,15 @@ the clock enable for the `tx_vld` register.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=41..49]
+    // handshake (asynchronous reset)
+    always_ff @(posedge clk, posedge rst)
+    if (rst) begin
+        tx_vld <= 1'b0;
+    end else begin
+        if (rx_rdy) begin
+            tx_vld <= rx_vld;
+        end
+    end
 ----
 
 TIP: TX is not *valid* after reset,
@@ -714,12 +723,21 @@ this is equivalent to the RX transfer condition.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=34..35]
+    // transfer
+    assign rx_trn = rx_vld & rx_rdy;
 ----
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_datapath.sv[lines=51..59]
+    // data path register (optional asynchronous reset)
+    always_ff @(posedge clk, posedge rst)
+    if (rst) begin
+        tx_dat <= DAT_RST;
+    end else begin
+        if (LOW_PWR ? rx_trn : rx_rdy) begin
+           tx_dat <= rx_dat;
+        end
+    end
 ----
 
 TIP: Copy the datapath value from RX to TX only on RX *transfer*.
@@ -850,7 +868,8 @@ equivalent equation with a ternary operator.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=61..62]
+    // combinational TX valid/data
+    assign tx_vld = rx_rdy ? rx_vld : 1'b1;
 ----
 
 TIP: When RX is *ready* then VALID is passed through,
@@ -872,7 +891,15 @@ the clock enable for the `rx_rdy` register.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=41..49]
+    // handshake (asynchronous reset)
+    always_ff @(posedge clk, posedge rst)
+    if (rst) begin
+        rx_rdy <= 1'b0;
+    end else begin
+        if (tx_vld) begin
+            rx_rdy <= tx_rdy;
+        end
+    end
 ----
 
 TIP: RX is *READY* after reset,
@@ -891,7 +918,7 @@ matches the above conditions from the state transition table.
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=63]
+    assign tx_dat = rx_rdy ? rx_dat : ls_dat;
 ----
 
 TIP: When RX is *ready*, TX datapath comes from RX,
@@ -962,12 +989,21 @@ ls_ena = rx_trn & ~tx_rdy;
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=37..38]
+    // transfer
+    assign rx_trn = rx_vld & rx_rdy;
 ----
 
 [source, verilog, linenums]
 ----
-include::../rtl/handshake/register_slice_backpressure.sv[lines=51..59]
+    // data path register (optional asynchronous reset)
+    always_ff @(posedge clk, posedge rst)
+    if (rst) begin
+        ls_dat <= DAT_RST;
+    end else begin
+        if (LOW_PWR ? rx_trn & ~tx_rdy : ~tx_rdy) begin
+            ls_dat <= rx_dat;
+        end
+    end
 ----
 
 TIP: Copy the datapath value from RX to TX only on RX *transfer* while TX is *not ready*.
@@ -1028,6 +1064,3 @@ Clock gating:
 
 * [[[osu, G3]]] Lusk, Hunter Brady. Power Optimization Through Clock Gating Standard Cells Designed for OSU VLSIARCH SKY130 Process
 https://www.proquest.com/openview/f0ad5107661bc9d124f3cb6a043b4673/1?pq-origsite=gscholar&cbl=18750&diss=y
-
-
-

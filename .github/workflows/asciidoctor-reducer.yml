@@ -1,0 +1,22 @@
+name: Reduce AsciiDoc documents
+on:
+  push:
+    paths:
+    - README-source.adoc
+    branches: ['**']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v6
+    - name: Install Asciidoctor Reducer
+      run: sudo gem install asciidoctor-reducer
+    - name: Reduce README
+      # to preserve preprocessor conditionals, add the --preserve-conditionals option
+      run: |
+        asciidoctor-reducer -o doc/handshake.adoc doc/handshake-source.adoc
+    - name: Commit and Push reduced documents
+      uses: EndBug/add-and-commit@v9
+      with:
+        add: doc/handshake.adoc
